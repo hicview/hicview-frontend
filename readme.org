@@ -1,0 +1,26 @@
+* Setting up the environment
+
+** Dependencies
+   HiCView-frontend require a javascript environment, which normally can be obtained from nodejs.
+   node > 10 
+   npm 
+** Running the app in localhost
+
+*** Install the dependencies
+ #+BEGIN_SRC sh
+ npm install 
+ # For Users in China, temperately using npm image maybe faster
+ npm install --registry https://registry.npm.taobao.org
+ #+END_SRC
+
+*** Install http server
+#+BEGIN_SRC sh
+npm install -g http-server # -g globally install
+#+END_SRC
+
+*** Run http-server & webpack dev-server
+#+BEGIN_SRC sh
+npx webpack-dev-server
+http-server --cors -a localhost # Please allow CORS and run in localhost
+#+END_SRC
+
