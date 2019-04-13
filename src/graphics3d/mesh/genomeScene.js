@@ -3,7 +3,7 @@
  * @Author: Hongpeng Ma
  * @Github: gitlab.com/hongpengm
  * @Date: 2019-03-27 22:18:23
- * @LastEditTime: 2019-03-29 02:13:13
+ * @LastEditTime: 2019-04-14 01:33:27
  */
 'use strict'
 import { Color, Object3D, Vector3 } from 'three'
@@ -13,6 +13,12 @@ import { ExtrudeScene } from './extrudeScene'
 const EventEmitter = require('events').EventEmitter
 const uidv4 = require('uuid/v4')
 
+/**
+ *
+ *
+ * @class GenomeScene
+ * @extends {EventEmitter}
+ */
 class GenomeScene extends EventEmitter {
   /**
    *Creates an instance of GenomeScene.

@@ -29,11 +29,8 @@ const uidv4 = require('uuid/v4')
 const arrops = require('ndarray-ops')
 const randomColor = require('randomcolor')
 
-
-
-
 main()
-// console.log(test_human_model)
+
 
 async function main () {
   /// ////////////////////////////////////////////////////////////////////////////
@@ -45,11 +42,14 @@ async function main () {
   // test2DHeatmapTrack();
   // testHorizontal1DTrack();
   
-  // console.log(document.getElementById("root"))
-  // ReactDOM.render(
-  //   <TestComponent />
-  //   , document.getElementById("root")
-  // )
+  const rootDiv = document.createElement('div')
+  rootDiv.id = 'root'
+  document.body.appendChild(rootDiv)
+   console.log(document.getElementById("root"))
+   ReactDOM.render(
+     <TestComponent />
+     , rootDiv
+   )
   let app2 = testGraphics2DApp()
   let app3 = await testGraphics3DApp()
   console.log(app3.genomeScene.respondEvents)
