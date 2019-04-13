@@ -24,11 +24,11 @@ class LineScene {
   /**
    *Creates an instance of LineScene.
    * @constructor
-   * @param {Array[THREE.Vector3]} points - Path, Array of Vector3
+   * @param {Array} points - [THREE.Vector3] Path, Array of Vector3
    * @param {THREE.Color} color - The color of new line, THREE.Color()
    * @param {number} [divisions=1] - default segments
    * @memberof LineScene
-   * @property {Array[THREE.Vector3]} points - path points
+   * @property {Array} points - [THREE.Vector3] path points
    * @property {number} length - path length
    * @property {THREE.Color} color - line init color
    * @property {number} [divisions=1] - default segments

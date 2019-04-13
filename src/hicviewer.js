@@ -4,6 +4,8 @@ import 'babel-polyfill'
 import * as PIXI from 'pixi.js'
 import { PIXIBlock } from './graphics2d/pixiBlock'
 // const {PIXIBlock, Block} = require('./graphics2d/block.js')
+import React from 'react'
+import ReactDOM from 'react-dom'
 
 import { nameToHex,
   hColor } from './utils/color'
@@ -15,6 +17,8 @@ import { Horizontal1DTrack } from './graphics2d/horizontal1DTrack'
 import { Graphics2DApplication } from './graphics2d/graphics2DApplication'
 import { Graphics3DApplication } from './graphics3d/graphics3DApplication'
 import { createDOM, shiftDOM } from './utils/DOM.js'
+import { TestComponent } from './react/reactG2d'
+
 const axios = require('axios')
 const d3 = require('d3')
 const ndarray = require('ndarray')
@@ -29,7 +33,6 @@ const { initThree,
   threeAnimate } = require('./initThreeJS.js')
 const { Vmanager } = require('./variableManager.js')
 
-const { initD3 } = require('./initD3.js')
 
 main()
 // console.log(test_human_model)
@@ -56,12 +59,17 @@ async function main () {
   // test_2d_headmap();
   // test2DHeatmapTrack();
   // testHorizontal1DTrack();
+  
+  console.log(document.getElementById("root"))
+  ReactDOM.render(
+    <TestComponent />
+    , document.getElementById("root")
+  )
   let app2 = testGraphics2DApp()
   let app3 = await testGraphics3DApp()
   console.log(app3.genomeScene.respondEvents)
   app2.centerTrack.track.addSubs(app3.genomeScene, 'selectionEnds', app3.genomeScene.respondEvents)
   
-  // initD3();
 }
 
 async function testGraphics3DApp () {

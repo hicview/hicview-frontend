@@ -1,4 +1,47 @@
-/*
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>graphics3d/mesh/genomeScene.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GenomeScene.GenomeScene.html">GenomeScene</a></li><li><a href="Graphics3DApplication.html">Graphics3DApplication</a><ul class='methods'><li data-type='method'><a href="Graphics3DApplication.html#addCustomizedMesh">addCustomizedMesh</a></li><li data-type='method'><a href="Graphics3DApplication.html#addTestGenome">addTestGenome</a></li><li data-type='method'><a href="Graphics3DApplication.html#addTestLine">addTestLine</a></li><li data-type='method'><a href="Graphics3DApplication.html#addTestSphere">addTestSphere</a></li><li data-type='method'><a href="Graphics3DApplication.html#addUpdateFunctions">addUpdateFunctions</a></li><li data-type='method'><a href="Graphics3DApplication.html#animate">animate</a></li><li data-type='method'><a href="Graphics3DApplication.html#executeUpdateFunctions">executeUpdateFunctions</a></li><li data-type='method'><a href="Graphics3DApplication.html#getGenomeDataByURL">getGenomeDataByURL</a></li><li data-type='method'><a href="Graphics3DApplication.html#getURLData">getURLData</a></li><li data-type='method'><a href="Graphics3DApplication.html#init">init</a></li><li data-type='method'><a href="Graphics3DApplication.html#initBBox">initBBox</a></li><li data-type='method'><a href="Graphics3DApplication.html#initCamera">initCamera</a></li><li data-type='method'><a href="Graphics3DApplication.html#initController">initController</a></li><li data-type='method'><a href="Graphics3DApplication.html#initLight">initLight</a></li><li data-type='method'><a href="Graphics3DApplication.html#initRenderer">initRenderer</a></li><li data-type='method'><a href="Graphics3DApplication.html#initScene">initScene</a></li><li data-type='method'><a href="Graphics3DApplication.html#parseGenomeStringData">parseGenomeStringData</a></li><li data-type='method'><a href="Graphics3DApplication.html#render">render</a></li></ul></li><li><a href="Graphics3DApplication.Graphics3DApplication.html">Graphics3DApplication</a></li><li><a href="Horizontal1DTrack.html">Horizontal1DTrack</a><ul class='methods'><li data-type='method'><a href="Horizontal1DTrack.html#applyTransform">applyTransform</a></li><li data-type='method'><a href="Horizontal1DTrack.html#draw">draw</a></li><li data-type='method'><a href="Horizontal1DTrack.html#drawAxis">drawAxis</a></li><li data-type='method'><a href="Horizontal1DTrack.html#drawPath">drawPath</a></li><li data-type='method'><a href="Horizontal1DTrack.html#drawPoints">drawPoints</a></li><li data-type='method'><a href="Horizontal1DTrack.html#init">init</a></li><li data-type='method'><a href="Horizontal1DTrack.html#initBBox">initBBox</a></li><li data-type='method'><a href="Horizontal1DTrack.html#initBehaviourHandler">initBehaviourHandler</a></li><li data-type='method'><a href="Horizontal1DTrack.html#respondEvents">respondEvents</a></li><li data-type='method'><a href="Horizontal1DTrack.html#zoomed">zoomed</a></li><li data-type='method'><a href="Horizontal1DTrack.html#zoomedCallback">zoomedCallback</a></li></ul></li><li><a href="Horizontal1DTrack.Horizontal1DTrack.html">Horizontal1DTrack</a></li><li><a href="LineScene.html">LineScene</a><ul class='methods'><li data-type='method'><a href="LineScene.html#getMesh">getMesh</a></li><li data-type='method'><a href="LineScene.html#initGeometry">initGeometry</a></li><li data-type='method'><a href="LineScene.html#initMesh">initMesh</a></li><li data-type='method'><a href="LineScene.html#reColor">reColor</a></li><li data-type='method'><a href="LineScene.html#setColors">setColors</a></li><li data-type='method'><a href="LineScene.html#setResolution">setResolution</a></li><li data-type='method'><a href="LineScene.html#updateFunctions">updateFunctions</a></li></ul></li><li><a href="LineScene.LineScene.html">LineScene</a></li></ul><h3>Global</h3><ul><li><a href="global.html#THREE">THREE</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">graphics3d/mesh/genomeScene.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
  * @Description:
  * @Author: Hongpeng Ma
  * @Github: gitlab.com/hongpengm
@@ -92,7 +135,7 @@ class GenomeScene extends EventEmitter {
   loadGenomeMesh () {
     let color = new Color()
     // i := chromeKey.index
-    for (let i = 0, l = this.data.getChromKeys().length; i < l; i++) {
+    for (let i = 0, l = this.data.getChromKeys().length; i &lt; l; i++) {
       let _chromKey = this.data.getChromKeys()[i]
 
       color.setHSL(i / l, 0.8, 0.7)
@@ -228,7 +271,7 @@ class GenomeScene extends EventEmitter {
             end: select[1][1]
           }
         } else {
-          for (let i = select[0][0]; i <= select[1][0]; i++) {
+          for (let i = select[0][0]; i &lt;= select[1][0]; i++) {
             if (i === select[0][0]) {
               highlightOptions[chromKeys[i]] = {
                 start: select[0][1],
@@ -285,3 +328,28 @@ class GenomeScene extends EventEmitter {
   }
 }
 export { GenomeScene }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Apr 14 2019 01:11:09 GMT+0800 (China Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

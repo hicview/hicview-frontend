@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>graphics3d/mesh/lineScene.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GenomeScene.GenomeScene.html">GenomeScene</a></li><li><a href="Graphics3DApplication.html">Graphics3DApplication</a><ul class='methods'><li data-type='method'><a href="Graphics3DApplication.html#addCustomizedMesh">addCustomizedMesh</a></li><li data-type='method'><a href="Graphics3DApplication.html#addTestGenome">addTestGenome</a></li><li data-type='method'><a href="Graphics3DApplication.html#addTestLine">addTestLine</a></li><li data-type='method'><a href="Graphics3DApplication.html#addTestSphere">addTestSphere</a></li><li data-type='method'><a href="Graphics3DApplication.html#addUpdateFunctions">addUpdateFunctions</a></li><li data-type='method'><a href="Graphics3DApplication.html#animate">animate</a></li><li data-type='method'><a href="Graphics3DApplication.html#executeUpdateFunctions">executeUpdateFunctions</a></li><li data-type='method'><a href="Graphics3DApplication.html#getGenomeDataByURL">getGenomeDataByURL</a></li><li data-type='method'><a href="Graphics3DApplication.html#getURLData">getURLData</a></li><li data-type='method'><a href="Graphics3DApplication.html#init">init</a></li><li data-type='method'><a href="Graphics3DApplication.html#initBBox">initBBox</a></li><li data-type='method'><a href="Graphics3DApplication.html#initCamera">initCamera</a></li><li data-type='method'><a href="Graphics3DApplication.html#initController">initController</a></li><li data-type='method'><a href="Graphics3DApplication.html#initLight">initLight</a></li><li data-type='method'><a href="Graphics3DApplication.html#initRenderer">initRenderer</a></li><li data-type='method'><a href="Graphics3DApplication.html#initScene">initScene</a></li><li data-type='method'><a href="Graphics3DApplication.html#parseGenomeStringData">parseGenomeStringData</a></li><li data-type='method'><a href="Graphics3DApplication.html#render">render</a></li></ul></li><li><a href="Graphics3DApplication.Graphics3DApplication.html">Graphics3DApplication</a></li><li><a href="Horizontal1DTrack.html">Horizontal1DTrack</a><ul class='methods'><li data-type='method'><a href="Horizontal1DTrack.html#applyTransform">applyTransform</a></li><li data-type='method'><a href="Horizontal1DTrack.html#draw">draw</a></li><li data-type='method'><a href="Horizontal1DTrack.html#drawAxis">drawAxis</a></li><li data-type='method'><a href="Horizontal1DTrack.html#drawPath">drawPath</a></li><li data-type='method'><a href="Horizontal1DTrack.html#drawPoints">drawPoints</a></li><li data-type='method'><a href="Horizontal1DTrack.html#init">init</a></li><li data-type='method'><a href="Horizontal1DTrack.html#initBBox">initBBox</a></li><li data-type='method'><a href="Horizontal1DTrack.html#initBehaviourHandler">initBehaviourHandler</a></li><li data-type='method'><a href="Horizontal1DTrack.html#respondEvents">respondEvents</a></li><li data-type='method'><a href="Horizontal1DTrack.html#zoomed">zoomed</a></li><li data-type='method'><a href="Horizontal1DTrack.html#zoomedCallback">zoomedCallback</a></li></ul></li><li><a href="Horizontal1DTrack.Horizontal1DTrack.html">Horizontal1DTrack</a></li><li><a href="LineScene.html">LineScene</a><ul class='methods'><li data-type='method'><a href="LineScene.html#getMesh">getMesh</a></li><li data-type='method'><a href="LineScene.html#initGeometry">initGeometry</a></li><li data-type='method'><a href="LineScene.html#initMesh">initMesh</a></li><li data-type='method'><a href="LineScene.html#reColor">reColor</a></li><li data-type='method'><a href="LineScene.html#setColors">setColors</a></li><li data-type='method'><a href="LineScene.html#setResolution">setResolution</a></li><li data-type='method'><a href="LineScene.html#updateFunctions">updateFunctions</a></li></ul></li><li><a href="LineScene.LineScene.html">LineScene</a></li></ul><h3>Global</h3><ul><li><a href="global.html#THREE">THREE</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">graphics3d/mesh/lineScene.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ * @Description:
+ * @Author: Hongpeng Ma
+ * @Github: gitlab.com/hongpengm
+ * @Date: 2019-03-27 20:37:07
+ * @LastEditTime: 2019-03-29 01:36:25
+ */
+
+const THREE = require('three')
+
+require('../geometry/lines/LineGeometry.js')
+require('../geometry/lines/LineMaterial.js')
+require('../geometry/lines/Line2.js')
+
+/**
+ *
+ *
+ * @class LineScene
+ */
+
+class LineScene {
+  // points [Vector3(),...]
+
+  /**
+   *Creates an instance of LineScene.
+   * @constructor
+   * @param {Array} points - [THREE.Vector3] Path, Array of Vector3
+   * @param {THREE.Color} color - The color of new line, THREE.Color()
+   * @param {number} [divisions=1] - default segments
+   * @memberof LineScene
+   * @property {Array} points - [THREE.Vector3] path points
+   * @property {number} length - path length
+   * @property {THREE.Color} color - line init color
+   * @property {number} [divisions=1] - default segments
+   * @property {THREE.geometry} geometry - geometry
+   * @property {THREE.material} material - material
+   * @property {THREE.mesh} mesh - mesh object
+   */
+  constructor (points, color, divisions = 1) {
+    this.points = points
+    this.length = points.length
+    this.color = color
+    this.divisions = divisions
+    this.initGeometry()
+
+    this.initMesh()
+    this.mesh.computeLineDistances()
+    this.mesh.scale.set(1, 1, 1)
+  }
+
+  /**
+   * Init Geometry of Line Scene
+   *
+   * @memberof LineScene
+   */
+  initGeometry () {
+    this.spline = new THREE.CatmullRomCurve3(this.points)
+    this.positions = []
+    this.colors = []
+    for (let i = 0, l = this.points.length * this.divisions; i &lt; l; i++) {
+      let point = this.spline.getPoint(i / l)
+      this.positions.push(point.x, point.y, point.z)
+      this.colors.push(this.color.r, this.color.g, this.color.b)
+    }
+    this.geometry = new THREE.LineGeometry()
+    this.geometry.setPositions(this.positions)
+    this.geometry.setColors(this.colors)
+  }
+
+  /**
+   * Init mesh of the scene.
+   *
+   * @memberof LineScene
+   */
+  initMesh () {
+    this.matLine = new THREE.LineMaterial({
+      color: 0xffffff,
+      linewidth: 5, // in pixels
+      vertexColors: THREE.VertexColors,
+      // resolution:  // to be set by renderer, eventually
+      dashed: false
+    })
+    this.mesh = new THREE.Line2(this.geometry, this.matLine)
+  }
+
+  /**
+   *
+   *
+   * @return {THREE.mesh} - return a mesh object.
+   * @memberof LineScene
+   */
+  getMesh () {
+    return this.mesh
+  }
+
+  /**
+   * Set resolution for material update.
+   *
+   * @param {*} width - viewport width.
+   * @param {*} height - viewport height.
+   * @memberof LineScene
+   */
+  setResolution (width, height) {
+    this.resWidth = width
+    this.resHeight = height
+  }
+
+  /**
+   * Set the default color and highlight color, currently disabled
+   *
+   * @param {*} defaultColor
+   * @param {*} highlightColor
+   * @memberof LineScene
+   */
+  setColors (defaultColor, highlightColor) {
+    this.defaultColor = defaultColor
+    this.highlightColor = highlightColor
+  }
+
+  /**
+   * Recolor the line, currently you should not use it.
+   *
+   * @param {number} start - [0-1] number, new color start
+   * @param {number} end - [0-1] number, new color ends
+   * @param {THREE.Color} color - new color
+   * @memberof LineScene
+   */
+  reColor (start, end, color) {
+    // start/end: [0-1] float
+    const colors = this.colors
+    let _start = Math.round(start * this.length)
+    let _end = Math.round(end * this.length)
+    for (let i = _start * 3; i &lt; _end * 3; i += 3) {
+      colors[i] = color.r
+      colors[i + 1] = color.g
+      colors[i + 2] = color.b
+    }
+    this.colors = colors
+    this.mesh.geometry.setColors(colors)
+  }
+
+  /**
+   * Function that updates materials' resolution.
+   *
+   * @return {function} - returns a closure function that updates material in render loop.
+   * @memberof LineScene
+   */
+  updateFunctions () {
+    return () => { this.matLine.resolution.set(this.resWidth, this.resHeight) } // resolution of the viewport
+  }
+  destroy () {
+    this.geometry.dispose()
+    this.material.dispose()
+  }
+}
+
+export { LineScene }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Apr 14 2019 01:11:09 GMT+0800 (China Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>
