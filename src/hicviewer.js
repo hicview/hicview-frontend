@@ -29,42 +29,27 @@ const uidv4 = require('uuid/v4')
 const arrops = require('ndarray-ops')
 const randomColor = require('randomcolor')
 
-const { initThree,
-  threeAnimate } = require('./initThreeJS.js')
-const { Vmanager } = require('./variableManager.js')
+
 
 
 main()
 // console.log(test_human_model)
 
 async function main () {
-  // Global Variable Manager
-  let vm = new Vmanager()
-  const testData = await axios.get('http://localhost:8080/Human/liberman_MDS.txt')
-  vm.addVariable('test_model', testData.data)
-
-  let a = document.createElement('div')
-  a.id = 'hello'
-  let b = document.createTextNode('Hello world')
-  a.appendChild(b)
-
-  document.body.append(a)
-
   /// ////////////////////////////////////////////////////////////////////////////
   //                                Main Entries                               //
   /// ////////////////////////////////////////////////////////////////////////////
-  // initThree()
-  // threeAnimate()
+
 
   // test_2d_headmap();
   // test2DHeatmapTrack();
   // testHorizontal1DTrack();
   
-  console.log(document.getElementById("root"))
-  ReactDOM.render(
-    <TestComponent />
-    , document.getElementById("root")
-  )
+  // console.log(document.getElementById("root"))
+  // ReactDOM.render(
+  //   <TestComponent />
+  //   , document.getElementById("root")
+  // )
   let app2 = testGraphics2DApp()
   let app3 = await testGraphics3DApp()
   console.log(app3.genomeScene.respondEvents)
