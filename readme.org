@@ -1,3 +1,6 @@
+* Documentation
+Please see [[https://hicview.github.io/hicview-frontend/]]
+
 * Setting up the environment
 
 ** Dependencies
