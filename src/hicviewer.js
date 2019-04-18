@@ -62,11 +62,9 @@ async function main () {
 async function testGraphics3DApp () {
   let app = new Graphics3DApplication(document.body)
   app.addTestSphere(0, 0, 0)
-  await app.addTestLine()
+//  await app.addTestLine()
   await app.addTestGenome()
-  const data = await app.getGenomeDataByURL('http://localhost:8080/Human/liberman_MDS.txt')
-  
-  console.log(data)
+
   function f () {
     requestAnimationFrame(f)
     app.render()
