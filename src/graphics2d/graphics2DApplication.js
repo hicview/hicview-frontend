@@ -48,6 +48,7 @@ class Graphics2DApplication {
   add1DTrack (position, options) {
     const trackArray = this[position + 'Track']
     let trackDOM, track
+    let options1d = {options:{path_type:'line'}}
     if (['top', 'bottom'].includes(position)) {
       if (options.domInfo) {
         const domInfo = options.domInfo
@@ -56,12 +57,17 @@ class Graphics2DApplication {
         trackDOM = createDOM('div', uidv4(), G2D_HORIZONTAL1D_WIDTH, G2D_HORIZONTAL1D_HEIGHT)
       }
       this.baseDOM.appendChild(trackDOM)
+      
       if (options.margin) {
-        track = new Horizontal1DTrack(trackDOM, options.margin)
-      } else {
-        track = new Horizontal1DTrack(trackDOM)
+        options1d.options = {
+	  margin:options.margin,
+	}
+      }
+      if (options.path_type){
+	options1d.options.path_type = options.path_type
       }
     }
+    track = new Horizontal1DTrack(trackDOM, options1d)
     if (options.drawFunction) {
       track.draw(options.drawFunction)
     }
@@ -118,12 +124,12 @@ class Graphics2DApplication {
       ? this.leftTrack.map(e => {
         return e.dom.getBoundingClientRect().width
       }).reduce((a, b) => { return a + b })
-      : 0
+    : 0
     centerTop = this.topTrack.length > 0
       ? this.topTrack.map(e => {
         return e.dom.getBoundingClientRect().height
       }).reduce((a, b) => { return a + b })
-      : 0
+    : 0
     if (this.centerTrack) {
       shiftDOM(this.centerTrack.dom, centerTop, centerLeft)
     }
@@ -189,9 +195,9 @@ class Graphics2DApplication {
    */
   syncTrackTransformBehaviour () {
     let track1DArr = this.topTrack
-      .concat(this.leftTrack)
-      .concat(this.rightTrack)
-      .concat(this.bottomTrack)
+	.concat(this.leftTrack)
+	.concat(this.rightTrack)
+	.concat(this.bottomTrack)
     const centerTrack = this.centerTrack.track
     track1DArr.forEach(e => {
       e.track.addSubs(centerTrack, 'transform', centerTrack.respondEvents)
@@ -206,9 +212,9 @@ class Graphics2DApplication {
    */
   syncTrackBrushBehaviour () {
     let track1DArr = this.topTrack
-      .concat(this.leftTrack)
-      .concat(this.rightTrack)
-      .concat(this.bottomTrack)
+	.concat(this.leftTrack)
+	.concat(this.rightTrack)
+	.concat(this.bottomTrack)
     const centerTrack = this.centerTrack.track
     track1DArr.forEach(e => {
       e.track.addSubs(centerTrack, 'selection', centerTrack.respondEvents)

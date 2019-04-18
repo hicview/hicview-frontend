@@ -20,6 +20,7 @@ const HORIZONTAL1D_SVG_CLASS = 'horizontal_1d_track_svg'
 const HORIZONTAL1D_BRUSH_CLASS = 'horizontal_1d_track_brush'
 const HORIZONTAL1D_X_AXIS_TICK_PIXEL = 40
 const HORIZONTAL1D_Y_AXIS_TICK_PIXEL = 20
+const HORIZONTAL1D_PATH_TYPE = 'line' // ['areaPath', 'line','bar']
 
 /**
  *
@@ -70,16 +71,42 @@ class Horizontal1DTrack extends EventEmitter {
    * @property {d3.scale} x_scale
    * @property {d3.scale} y_scale
    */
-  constructor (parentDOM, margin = {
-    top: HORIZONTAL1D_MARGIN_TOP,
-    bottom: HORIZONTAL1D_MARGIN_BOTTOM,
-    right: HORIZONTAL1D_MARGIN_RIGHT,
-    left: HORIZONTAL1D_MARGIN_LEFT
-  }, options = {
-    line_stroke_width: HORIZONTAL1D_LINE_STROKE_WIDTH,
-    circle_radius: HORIZONTAL1D_CIRCLE_RADIUS
-  }) {
+  constructor (parentDOM, otherArgs) {
     super()
+    let margin = {
+      top: HORIZONTAL1D_MARGIN_TOP,
+      bottom: HORIZONTAL1D_MARGIN_BOTTOM,
+      right: HORIZONTAL1D_MARGIN_RIGHT,
+      left: HORIZONTAL1D_MARGIN_LEFT
+    }
+    let options = {
+      line_stroke_width: HORIZONTAL1D_LINE_STROKE_WIDTH,
+      circle_radius: HORIZONTAL1D_CIRCLE_RADIUS,
+      path_type: HORIZONTAL1D_PATH_TYPE
+    }
+    if (otherArgs !== undefined) {
+      Object.keys(otherArgs).forEach(argK => {
+        switch (argK) {
+          case 'margin':
+            let fillParam = margin
+          case 'options':
+            fillParam = options
+            Object.keys(otherArgs[argK]).forEach(k => {
+	    if (fillParam.hasOwnProperty(k)) {
+	      fillParam[k] = otherArgs[argK][k]
+	    }
+            })
+            break
+          default:
+            break
+        }
+      })
+    }
+    // if (otherArgs.hasOwnProperty('margin')) {
+    //  Object.keys(otherArgs.margin).forEach(k => {
+    //    margin[k] = otherArgs.margin[k]
+    //  })
+    // }
     this.initBBox(parentDOM, margin)
 
     this.svg = d3.select(this.baseDOM).append('svg')
@@ -99,6 +126,7 @@ class Horizontal1DTrack extends EventEmitter {
       .attr('height', this.height)
       .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
     this.options = options
+    //    console.log(options)
     this.subscribe = []
     this.subscribers = []
     this.initBehaviourHandler()
@@ -195,7 +223,10 @@ class Horizontal1DTrack extends EventEmitter {
     }
     this.drawAxis()
     this.drawPath()
-    this.drawPoints()
+    if (this.options.path_type === 'line' ||
+	this.options.path_type === 'undefined') {
+      this.drawPoints()
+    }
   }
 
   /**
@@ -223,15 +254,54 @@ class Horizontal1DTrack extends EventEmitter {
    * @memberof Horizontal1DTrack
    */
   drawPath () {
+    if (this.path) {
+      delete this.path
+    }
     this.clip_mask = this.svgg.append('g')
       .attr('clip-path', 'url(#clip)')
-    this.path = this.clip_mask.append('path')
-      .datum(this.dataSet)
-      .attr('class', 'line')
-      .style('fill', 'none')
-      .style('stroke', 'black')
-      .style('stroke-width', this.options.line_stroke_width)
-      .attr('d', this.line)
+    //    console.log(this.options.path_type)
+    switch (this.options.path_type) {
+      case 'line':
+
+        this.path = this.clip_mask.append('path')
+          .datum(this.dataSet)
+          .attr('class', 'line')
+          .style('fill', 'none')
+          .style('stroke', 'black')
+          .style('stroke-width', this.options.line_stroke_width)
+          .attr('d', this.shape)
+        break
+      case 'areaPath':
+        this.path = this.clip_mask.append('path')
+          .attr('class', 'area')
+          .attr('fill', 'steelblue')
+          .datum(this.dataSet)
+          .attr('d', this.shape)
+        //      console.log('here', this.dataSet)
+        break
+      case 'bar':
+        console.log('here', this.dataSet)
+        this.bars = this.clip_mask.append('g')
+        this.bars
+          .selectAll()
+          .data(this.dataSet)
+          .enter()
+          .append('rect')
+          .attr('x', d => { return this.xScale(d.x) })
+          .attr('y', d => { return this.yScale(d.y) })
+          .attr('height', d => { return this.height - this.yScale(d.y) })
+          .attr('width', this.xScale.bandwidth())
+        //      console.log('here', this.dataSet)
+        break
+      default:
+        this.path = this.clip_mask.append('path')
+          .datum(this.dataSet)
+          .attr('class', 'line')
+          .style('fill', 'none')
+          .style('stroke', 'black')
+          .style('stroke-width', this.options.line_stroke_width)
+          .attr('d', this.shape)
+    }
   }
 
   /**
@@ -281,9 +351,20 @@ class Horizontal1DTrack extends EventEmitter {
    * @memberof Horizontal1DTrack
    */
   set xScale (x) {
-    this.x_scale = d3.scaleLinear()
-      .domain(x.domain)
-      .range(x.range)
+    switch (this.options.path_type) {
+      case 'areaPath':
+      case 'line':
+        this.x_scale = d3.scaleLinear()
+          .domain(x.domain)
+          .range(x.range)
+        break
+      case 'bar':
+        this.x_scale = d3.scaleBand()
+          .range(x.range)
+          .domain(x.domain)
+          .bandwidth(0.2)
+          .padding(0.2)
+    }
   }
   get xScale () {
     return this.x_scale
@@ -291,7 +372,8 @@ class Horizontal1DTrack extends EventEmitter {
   set yScale (x) {
     this.y_scale = d3.scaleLinear()
       .domain(x.domain)
-      .range(x.range)
+    // Flip the y axis to make it looks ok
+      .range([x.range[1], x.range[0]])
   }
   get yScale () {
     return this.y_scale
@@ -303,10 +385,20 @@ class Horizontal1DTrack extends EventEmitter {
    * @readonly
    * @memberof Horizontal1DTrack
    */
-  get line () {
-    return d3.line()
-      .x(d => { return this.x_scale(d.x) })
-      .y(d => { return this.y_scale(d.y) })
+  get shape () {
+    switch (this.options.path_type) {
+      case 'line':
+        return d3.line()
+          .x(d => { return this.x_scale(d.x) })
+          .y(d => { return this.y_scale(d.y) })
+      case 'areaPath':
+        return d3.area()
+          .curve(d3.curveStepAfter)
+          .x(d => { return this.x_scale(d.x) })
+          .y0(d => { return this.y_scale(d.y) })
+          .y1(d => { return this.y_scale(0) })
+      default:
+    }
   }
 
   /// //////////////////////////////////////////////////////////////////////////
@@ -328,13 +420,29 @@ class Horizontal1DTrack extends EventEmitter {
     emitEvents = true) {
     let transformString
     transformString = 'translate(' + transform.x + ',' + '0) scale(' + transform.k + ',1)'
-    this.path
-      .attr('transform', transformString)
-    this.points
-      .attr('transform', transformString)
+    switch (this.options.path_type) {
+      case 'line':
+        this.points
+          .attr('transform', transformString)
+      case 'areaPath':
+        this.path
+          .attr('transform', transformString)
+        break
+      case 'bar':
+        this.bars
+          .attr('transform', transformString)
+        break
+      default:
+    }
+    if (this.options.path_type === 'line') {
+      if (this.options.path_type === 'line') {
+
+      }
+    }
     this.svgg.selectAll('.dot').attr('r', this.options.circle_radius / transform.k)
     this.svgg.selectAll('.line').style('stroke-width', this.options.line_stroke_width)
     if (transformXAxis) {
+      console.log(transform)
       this.gX.call(this.xAxis.scale(transform.rescaleX(this.xScale)))
     }
     if (transformYAxis) {
@@ -361,7 +469,7 @@ class Horizontal1DTrack extends EventEmitter {
         case 'transform':
           this.applyTransform(e.transform, true, false, false)
           break
-      case 'selection':
+        case 'selection':
           if (this.behaviour === 'brush') {
             // 2D Situation
             if (Array.isArray(e.selection[0])) {

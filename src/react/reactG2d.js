@@ -9,4 +9,4 @@ class TestComponent extends React.Component {
     return (<div> Hello world </div>)
   }
 }
-export { TestComponent }
+export default TestComponent 
