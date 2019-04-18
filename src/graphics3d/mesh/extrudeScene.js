@@ -5,6 +5,7 @@
  * @Date: 2019-03-29 02:24:30
  * @LastEditTime: 2019-03-29 02:27:55
  */
+import { argsParser } from '../../utils/args'
 
 const THREE = require('three')
 
@@ -16,9 +17,33 @@ for (let i = 0; i < count; i++) {
 }
 const defaultExtrudeShape = new THREE.Shape(pts)
 
+const circle = function(radius=3, count=30){
+  let pts = []
+  for (let i = 0; i < count; i++) {
+    let a = 2 * i / count * Math.PI
+    pts.push(new THREE.Vector2(Math.cos(a) * radius, Math.sin(a) * radius))
+  }
+  return new THREE.Shape(pts)
+}
+
 class ExtrudeScene {
-  constructor (points, matColor, shape = defaultExtrudeShape, divisions = 1) {
+  constructor (points, matColor, args) {
+    let optionsDefault = {
+      shape: defaultExtrudeShape,
+      radius: 3,
+      shapeDivisions: 30,
+      divisions: 1
+    }
+    const parsedArgs = argsParser(args, {
+      options: optionsDefault
+    })
+    let { options } = parsedArgs
+    this.options = options
+    let {shape, divisions} = options
     let extrudePath = new THREE.CatmullRomCurve3(points)
+    if (shape === 'circle'){
+      shape = circle(options.radius, options.shapeDivisions)
+    }
     let extrudeSettings = {
       steps: points.length * divisions,
       bevelEnabled: false,

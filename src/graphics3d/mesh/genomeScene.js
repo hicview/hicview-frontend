@@ -9,6 +9,7 @@
 import { Color, Object3D, Vector3 } from 'three'
 import { LineScene } from './lineScene'
 import { ExtrudeScene } from './extrudeScene'
+import { argsParser } from '../../utils/args'
 
 const EventEmitter = require('events').EventEmitter
 const uidv4 = require('uuid/v4')
@@ -32,11 +33,17 @@ class GenomeScene extends EventEmitter {
    * @property {THREE.Object3D} baseObject - base object, all chromosome objects are appended to this object
    * @property {Array} _updateFunctions - [function] collection of update functions in mesh.
    */
-  constructor (app, chrom3DModel = undefined, otherArgs={
-    skeletonType: GENOME_SCENE_SKELETON_TYPE
-  }) {
+  constructor (app, chrom3DModel, args) {
     super()
+    let optionsDefault = {
+      skeletonType: GENOME_SCENE_SKELETON_TYPE
+    }
+    const parsedArgs = argsParser(args, {
+      options: optionsDefault
+    })
+    let { options } = parsedArgs
     this.id = uidv4()
+    this.options = options
     this.subscribe = []
     this.subscribers = []
     this._updateFunctions = []
@@ -45,9 +52,10 @@ class GenomeScene extends EventEmitter {
     let chroms = {}
 
     // baseObject.add(chroms['1'].getLine());
-    
+
     this.baseObject = new Object3D()
     this.chroms = chroms
+    this.allChromsVisible = true
     this.app = app
     this.data = chrom3DModel
   }
@@ -103,19 +111,36 @@ class GenomeScene extends EventEmitter {
     // i := chromeKey.index
     for (let i = 0, l = this.data.getChromKeys().length; i < l; i++) {
       let _chromKey = this.data.getChromKeys()[i]
-
       color.setHSL(i / l, 0.8, 0.7)
-      let chr_ = new LineScene(this.data.getChromPositions(_chromKey), color)
-      chr_.setResolution(this.resWidth, this.resHeight)
+      let chr_
+      switch (this.options.skeletonType) {
+      case 'line':
+        chr_ = new LineScene(this.data.getChromPositions(_chromKey), color)
+        chr_.setResolution(this.resWidth, this.resHeight)
+        this._updateFunctions.push(chr_.updateFunctions())
+        break
+      case 'tube':
+        chr_ = new ExtrudeScene(this.data.getChromPositions(_chromKey), color, {
+	  options: {
+	    shape: 'circle',
+	    radius: 1,
+	    shapeDivisions: 4
+	  }
+        })
+        break
+      default:
+      }
+
       this.chroms[_chromKey] = {
         line: chr_,
         color: color.clone(),
+        visible: true,
         highlight: undefined
       }
-      this._updateFunctions.push(chr_.updateFunctions())
       this.baseObject.add(chr_.mesh)
     }
     this.moveToCenter()
+    this.updateAppGUI()
   }
 
   /**
@@ -150,8 +175,8 @@ class GenomeScene extends EventEmitter {
       e.forEach((e_) => {
         let point_ = e_.slice(1)
         x.add(new Vector3(point_[0],
-          point_[1],
-          point_[2]))
+			  point_[1],
+			  point_[2]))
       })
     })
     // this genome's average offset
@@ -175,9 +200,17 @@ class GenomeScene extends EventEmitter {
     if (color === undefined) {
       color = this.chroms[chromKey].color
     }
-    let highlightLine = new ExtrudeScene(chromPositions, color)
+    let highlightLine = new ExtrudeScene(chromPositions, color, {
+      options: {
+        shape: 'circle',
+        radius: 1.5,
+        shapeDivisions: 20
+      }
+    })
     this.chroms[chromKey].highlight = highlightLine
-    this.baseObject.add(highlightLine.mesh)
+    if (this.chroms[chromKey].visible === true) {
+      this.baseObject.add(highlightLine.mesh)
+    }
   }
   highlightChroms (highlightOptions) {
     Object.keys(highlightOptions).forEach(chr => {
@@ -212,7 +245,49 @@ class GenomeScene extends EventEmitter {
     let chrom = this.chroms[chromKey]
     let len = chrom.line.length
     return chrom.line.points.slice(Math.round(start * len),
-      Math.round(end * len))
+				   Math.round(end * len))
+  }
+  updateAppGUI () {
+    const { app } = this
+    const gui = app.gui
+    let test = {
+      name: 'Hello'
+    }
+    console.log(this.chroms)
+    Object.keys(this.chroms).forEach(k => {
+      gui.__folders['Chromosomes']
+        .add(this.chroms[k], 'visible')
+	.name('Chrom ' + k)
+        .onChange(() => {
+           this.updateVisibility()
+        })
+    })
+    console.log(gui)
+    gui.__folders['Chromosomes']
+      .add(this, 'allChromsVisible')
+      .name('Select All')
+      .onChange(()=>{
+	this.chromsForEach((d)=>{
+	  d.visible = d.visible ? false: true 
+	})
+	this.updateVisibility()
+	Object.keys(gui.__folders).forEach(folder=>{
+	  gui.__folders[folder].__controllers.forEach(c=>{{
+	    c.updateDisplay()
+	  }})
+	})
+      })
+     
+    
+  }
+  updateVisibility () {
+    Object.keys(this.chroms).forEach(k => {
+      const d = this.chroms[k]
+      d.line.mesh.visible = d.visible
+      if (d.highlight){
+	d.highlight.mesh.visible = d.visible
+      }
+    })
   }
   updateFunctions () {
     return this._updateFunctions
@@ -221,49 +296,48 @@ class GenomeScene extends EventEmitter {
   respondEvents (e) {
     console.log('Genome Scene Received', e)
     switch (e.sourceEvent) {
-      case 'selectionEnds':
-        console.log(e)
-        const chromKeys = this.data.getChromKeys()
-        const chromSelection = [e.selection[0][0] / e.context.width * chromKeys.length,
-          e.selection[1][0] / e.context.width * chromKeys.length]
-        let select = [[Math.floor(chromSelection[0]),
-          chromSelection[0] - Math.floor(chromSelection[0])],
-        [Math.floor(chromSelection[1]),
-          chromSelection[1] - Math.floor(chromSelection[1])]]
-        let highlightOptions = {}
-        if (select[0][0] === select[0][1]) {
-          highlightOptions[chromKeys[select[0][0]]] = {
-            start: select[0][1],
-            end: select[1][1]
-          }
-        } else {
-          for (let i = select[0][0]; i <= select[1][0]; i++) {
-            if (i === select[0][0]) {
-              highlightOptions[chromKeys[i]] = {
-                start: select[0][1],
-                end: 1
-              }
-            } else if (i === select[1][0]) {
-              highlightOptions[chromKeys[i]] = {
-                start: 0,
-                end: select[1][1]
+    case 'selectionEnds':
+      console.log(e)
+      const chromKeys = this.data.getChromKeys()
+      const chromSelection = [e.selection[0][0] / e.context.width * chromKeys.length,
+			      e.selection[1][0] / e.context.width * chromKeys.length]
+      let select = [[Math.floor(chromSelection[0]),
+		     chromSelection[0] - Math.floor(chromSelection[0])],
+		    [Math.floor(chromSelection[1]),
+		     chromSelection[1] - Math.floor(chromSelection[1])]]
+      let highlightOptions = {}
+      if (select[0][0] === select[0][1]) {
+        highlightOptions[chromKeys[select[0][0]]] = {
+          start: select[0][1],
+          end: select[1][1]
+        }
+      } else {
+        for (let i = select[0][0]; i <= select[1][0]; i++) {
+          if (i === select[0][0]) {
+            highlightOptions[chromKeys[i]] = {
+              start: select[0][1],
+              end: 1
+            }
+          } else if (i === select[1][0]) {
+            highlightOptions[chromKeys[i]] = {
+              start: 0,
+              end: select[1][1]
 
-              }
-            } else {
-              highlightOptions[chromKeys[i]] = {
-                start: 0,
-                end: 1
-              }
+            }
+          } else {
+            highlightOptions[chromKeys[i]] = {
+              start: 0,
+              end: 1
             }
           }
         }
-        console.log(highlightOptions)
-        this.removeAllHighlightChroms()
-        this.highlightChroms(highlightOptions)
-        console.log(this.chroms)
-        break
-      default:
-        break
+      }
+      console.log(highlightOptions)
+      this.removeAllHighlightChroms()
+      this.highlightChroms(highlightOptions)
+      break
+    default:
+      break
     }
   }
   /// //////////////////////////////////////////////////////////////////////////
@@ -291,6 +365,15 @@ class GenomeScene extends EventEmitter {
         // sub.subscriber.emit.apply(sub.subscriber, [type].concat(args))
       }
     })
+  }
+  /////////////////////////////////////////////////////////////////////////////
+  //                                  Utils                                  //
+  /////////////////////////////////////////////////////////////////////////////
+  chromsForEach(f){
+    Object.keys(this.chroms).forEach((chromKey)=>{
+      f(this.chroms[chromKey])
+    })
+    
   }
 }
 export { GenomeScene }
