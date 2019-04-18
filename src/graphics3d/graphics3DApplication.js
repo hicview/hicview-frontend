@@ -150,6 +150,7 @@ class Graphics3DApplication {
 
   initGUIControl(){
     this.gui = new dat.GUI()
+//    this.baseDOM.appendChild(this.gui.domElement)
     this.gui.addFolder('Chromosomes')
     this.gui.addFolder('Chrom Colors')
   }

@@ -6,6 +6,7 @@
  * @LastEditTime: 2019-03-29 02:27:55
  */
 import { argsParser } from '../../utils/args'
+import { hColor } from '../../utils/color'
 
 const THREE = require('three')
 
@@ -56,6 +57,9 @@ class ExtrudeScene {
     this.length = points.length
     this.renderLength = this.length * divisions
     this.mesh = mesh
+  }
+  changeColor(color){
+    this.mesh.material.color.setHex(color)
   }
 }
 

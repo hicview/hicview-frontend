@@ -10,6 +10,7 @@ import { Color, Object3D, Vector3 } from 'three'
 import { LineScene } from './lineScene'
 import { ExtrudeScene } from './extrudeScene'
 import { argsParser } from '../../utils/args'
+import { hColor } from '../../utils/color'
 
 const EventEmitter = require('events').EventEmitter
 const uidv4 = require('uuid/v4')
@@ -134,6 +135,7 @@ class GenomeScene extends EventEmitter {
       this.chroms[_chromKey] = {
         line: chr_,
         color: color.clone(),
+	color255: new hColor(color).rgb255,
         visible: true,
         highlight: undefined
       }
@@ -250,10 +252,8 @@ class GenomeScene extends EventEmitter {
   updateAppGUI () {
     const { app } = this
     const gui = app.gui
-    let test = {
-      name: 'Hello'
-    }
     console.log(this.chroms)
+    // Add Chromosome Specific Visible Checkbox
     Object.keys(this.chroms).forEach(k => {
       gui.__folders['Chromosomes']
         .add(this.chroms[k], 'visible')
@@ -263,9 +263,10 @@ class GenomeScene extends EventEmitter {
         })
     })
     console.log(gui)
+    // Add Toggle All Chromosomes
     gui.__folders['Chromosomes']
       .add(this, 'allChromsVisible')
-      .name('Select All')
+      .name('Toggle All')
       .onChange(()=>{
 	this.chromsForEach((d)=>{
 	  d.visible = d.visible ? false: true 
@@ -277,7 +278,17 @@ class GenomeScene extends EventEmitter {
 	  }})
 	})
       })
-     
+    // Add Chromosome Specific Color Checkbox
+    Object.keys(this.chroms).forEach(k=>{
+      gui.__folders['Chrom Colors']
+	.addColor(this.chroms[k],'color255')
+	.name(k+'Color')
+	.onChange(()=>{
+	  this.updateColor255()
+	})
+    })
+    
+    
     
   }
   updateVisibility () {
@@ -286,6 +297,25 @@ class GenomeScene extends EventEmitter {
       d.line.mesh.visible = d.visible
       if (d.highlight){
 	d.highlight.mesh.visible = d.visible
+      }
+    })
+  }
+  updateColor255 () {
+    Object.keys(this.chroms).forEach(k => {
+      const d = this.chroms[k]
+      // Compare color and color 255
+      console.log(d)
+      let colorConvert = new hColor(d.color).rgb255
+      if (d.color255.r !== colorConvert.r ||
+	  d.color255.r !== colorConvert.g ||
+	  d.color255.r !== colorConvert.b 
+	 ){
+	// If not equal, set color to color 255
+	d.color.r = d.color255.r / 255
+	d.color.g = d.color255.g / 255
+	d.color.b = d.color255.b / 255
+	// update material
+	d.line.mesh.material.color.set(d.color)
       }
     })
   }
