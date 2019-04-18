@@ -215,6 +215,16 @@ class Graphics3DApplication {
     this.addUpdateFunctions(genomeScene.updateFunctions())
     this.genomeScene = genomeScene
   }
+  async addGenome(dataURL){
+    const app = this
+    const data = await this.getGenomeDataByURL(dataURL)
+    const genomeScene = new GenomeScene(this, data)
+    genomeScene.setResolution(this.width, this.height)
+    genomeScene.loadGenomeMesh()
+    genomeScene.addToScene()
+    this.addUpdateFunctions(genomeScene.updateFunctions())
+    this.genomeScene = genomeScene
+  }
 
   /**
    * Adding a customized mesh

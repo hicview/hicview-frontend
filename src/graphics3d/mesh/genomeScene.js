@@ -12,6 +12,7 @@ import { ExtrudeScene } from './extrudeScene'
 
 const EventEmitter = require('events').EventEmitter
 const uidv4 = require('uuid/v4')
+const GENOME_SCENE_SKELETON_TYPE = 'line' // ['line', 'tube']
 
 /**
  *
@@ -31,7 +32,9 @@ class GenomeScene extends EventEmitter {
    * @property {THREE.Object3D} baseObject - base object, all chromosome objects are appended to this object
    * @property {Array} _updateFunctions - [function] collection of update functions in mesh.
    */
-  constructor (app, chrom3DModel = undefined) {
+  constructor (app, chrom3DModel = undefined, otherArgs={
+    skeletonType: GENOME_SCENE_SKELETON_TYPE
+  }) {
     super()
     this.id = uidv4()
     this.subscribe = []
@@ -42,7 +45,7 @@ class GenomeScene extends EventEmitter {
     let chroms = {}
 
     // baseObject.add(chroms['1'].getLine());
-
+    
     this.baseObject = new Object3D()
     this.chroms = chroms
     this.app = app
