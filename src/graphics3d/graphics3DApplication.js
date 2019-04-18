@@ -10,6 +10,7 @@ import { GenomeScene } from './mesh/genomeScene'
 import { LineScene } from './mesh/lineScene'
 import { ExtrudeScene } from './mesh/extrudeScene'
 import { Chrom3DModel } from './model/genomeModel.js'
+import * as dat from 'dat.gui'
 'use strict'
 const THREE = require('three')
 const d3 = require('d3')
@@ -55,6 +56,7 @@ class Graphics3DApplication {
     this.initLight()
     this.initRenderer()
     this.initController()
+    this.initGUIControl()
   }
 
   /**
@@ -145,6 +147,14 @@ class Graphics3DApplication {
     c.enableDamping = true
     c.dampingFactor = 0.25
   }
+
+  initGUIControl(){
+    this.gui = new dat.GUI()
+//    this.baseDOM.appendChild(this.gui.domElement)
+    this.gui.addFolder('Chromosomes')
+    this.gui.addFolder('Chrom Colors')
+  }
+ 
   /// //////////////////////////////////////////////////////////////////////////
   //                              Add Scene Obj                              //
   /// //////////////////////////////////////////////////////////////////////////
@@ -201,7 +211,11 @@ class Graphics3DApplication {
    */
   async addTestGenome () {
     const data = await this.getGenomeDataByURL('http://localhost:8080/Human/liberman_MDS.txt')
-    const genomeScene = new GenomeScene(this, data)
+    const genomeScene = new GenomeScene(this, data, {
+      options: {
+	skeletonType: 'tube'
+      }
+    })
     genomeScene.setResolution(this.width, this.height)
     genomeScene.loadGenomeMesh()
     let testColor = new THREE.Color()
@@ -211,6 +225,19 @@ class Graphics3DApplication {
     genomeScene.highlightChroms({
       '2': { start: 0.4, end: 0.5, color: testColor }
     })
+    genomeScene.addToScene();
+    //['1','2','3','4','5','6','7'].forEach(k=>{
+    //  genomeScene.chroms[k].line.mesh.visible = false
+    //})
+    this.addUpdateFunctions(genomeScene.updateFunctions())
+    this.genomeScene = genomeScene
+  }
+  async addGenome(dataURL){
+    const app = this
+    const data = await this.getGenomeDataByURL(dataURL)
+    const genomeScene = new GenomeScene(this, data)
+    genomeScene.setResolution(this.width, this.height)
+    genomeScene.loadGenomeMesh()
     genomeScene.addToScene()
     this.addUpdateFunctions(genomeScene.updateFunctions())
     this.genomeScene = genomeScene

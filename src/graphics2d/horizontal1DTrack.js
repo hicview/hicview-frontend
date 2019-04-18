@@ -7,6 +7,7 @@
  */
 'use strict'
 import { HiCEvent } from '../events/events'
+import { argsParser } from '../utils/args'
 const d3 = require('d3')
 const uidv4 = require('uuid/v4')
 const EventEmitter = require('events').EventEmitter
@@ -73,35 +74,24 @@ class Horizontal1DTrack extends EventEmitter {
    */
   constructor (parentDOM, otherArgs) {
     super()
-    let margin = {
+    let marginDefault = {
       top: HORIZONTAL1D_MARGIN_TOP,
       bottom: HORIZONTAL1D_MARGIN_BOTTOM,
       right: HORIZONTAL1D_MARGIN_RIGHT,
       left: HORIZONTAL1D_MARGIN_LEFT
     }
-    let options = {
+    let optionsDefault = {
       line_stroke_width: HORIZONTAL1D_LINE_STROKE_WIDTH,
       circle_radius: HORIZONTAL1D_CIRCLE_RADIUS,
       path_type: HORIZONTAL1D_PATH_TYPE
     }
-    if (otherArgs !== undefined) {
-      Object.keys(otherArgs).forEach(argK => {
-        switch (argK) {
-          case 'margin':
-            let fillParam = margin
-          case 'options':
-            fillParam = options
-            Object.keys(otherArgs[argK]).forEach(k => {
-	    if (fillParam.hasOwnProperty(k)) {
-	      fillParam[k] = otherArgs[argK][k]
-	    }
-            })
-            break
-          default:
-            break
-        }
-      })
-    }
+    const parsedArgs = argsParser(otherArgs, {
+      options: optionsDefault,
+      margin: marginDefault
+    })
+    let {options, margin} = parsedArgs
+ 
+
     // if (otherArgs.hasOwnProperty('margin')) {
     //  Object.keys(otherArgs.margin).forEach(k => {
     //    margin[k] = otherArgs.margin[k]
