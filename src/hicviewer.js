@@ -65,10 +65,14 @@ async function testGraphics3DApp () {
 //  await app.addTestLine()
   await app.addTestGenome()
 
-  function f () {
+  function f (time) {
+   
     requestAnimationFrame(f)
     app.render()
-    app.controller.update()
+    if (app.controller.update){
+      app.controller.update()
+      app.controller.camera.updateMatrixWorld()
+    }
   }
   f()
   return app

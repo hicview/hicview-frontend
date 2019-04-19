@@ -11,7 +11,7 @@ import * as THREE from 'three';
 THREE.OrbitControls = function( object, domElement ) {
 
   this.object = object;
-
+  this.camera = this.object
   this.domElement = ( domElement !== undefined ) ? domElement : document;
 
   // Set to false to disable this control
