@@ -2,15 +2,12 @@ import { Vector3,
 	 Euler,
 	 Object3D } from 'three'
 class CControls {
-  constructor (camera, domElement) {
+  constructor (camera, domElement, enabled = false) {
     this.camera = camera
-    this.camera.rotation.set(0, 0, 0)
-    this.baseDOM = (domElement !== undefined) ? domElement : document
-    // pitch & yaw, avoid Gimble Lock
-    // Please see Euler angle
-    this.camera.translateZ(300)
 
-    this.enabled = true
+    this.baseDOM = (domElement !== undefined) ? domElement : document
+
+    this.enabled = enabled
     this.enableKeys = true
     this.enableZoom = true
     this.zoomSpeed = 0.95
@@ -35,16 +32,20 @@ class CControls {
       right: new Vector3(0, 0, -1)
     }
 
-    this.cameraFront = new Vector3(0, 0, -1)
-    this.leastFrameInterval = 50
-    this.delta = 0
-    this.rotateEuler = new Euler(0, 0, 0, 'YXZ')
-    this.init()
+    if (this.enabled === true) {
+      this.init()
+    }
 
     const controller = this
     this.listeners = { }
   }
   init () {
+    this.camera.rotation.set(0, 0, 0)
+    this.camera.position.set(0, 0, 300)
+    this.cameraFront = new Vector3(0, 0, -1)
+    this.leastFrameInterval = 50
+    this.delta = 0
+    this.rotateEuler = new Euler(0, 0, 0, 'YXZ')
     this.initMouseMove()
     this.initKeyDown()
     this.initWheel()
@@ -112,6 +113,7 @@ class CControls {
   }
 
   handleMouseDown (e) {
+    if (this.enabled !== true) return
     event.preventDefault()
     const controller = this
     this.baseDOM.addEventListener('mouseup', function _mouseup (e) {
@@ -119,14 +121,14 @@ class CControls {
       return controller.handleMouseUp(e)
     }, false)
     this.moveFlag = true
-    console.log('here')
-    console.log(this)
   }
   handleMouseUp (e) {
+    if (this.enabled !== true) return
     this.moveFlag = false
     this.baseDOM.removeEventListener('mouseup', this.listeners.mouseup)
   }
   handleMouseMove (e) {
+    if (this.enabled !== true) return
     let movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0
     let movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0
     if (this.moveFlag === true) {
@@ -142,6 +144,7 @@ class CControls {
     // console.log(this.moveFlag, movementX, movementY, this.rotateEuler)
   }
   handleMouseScroll (e) {
+    if (this.enabled !== true) return
     // console.log(this.camera.scale)
     if (e.deltaY < 0) {
       if (this.camera.isPerspectiveCamera) {
@@ -154,6 +157,7 @@ class CControls {
     }
   }
   handleKeyDown (e) {
+    if (this.enabled !== true) return
     console.log('look', e.keyCode)
     switch (e.keyCode) {
       case this.keys.W:
@@ -185,7 +189,7 @@ class CControls {
 			       .multiplyScalar(this.delta))
         break
     }
-
+    console.log(this.delta)
     // this.camera.position.copy(this.cameraObject.position)
     // this.camera.lookAt(this.target)
     // this.cameraObject.updateProjectionMatrix()
@@ -196,6 +200,8 @@ class CControls {
     window.removeEventListener('keydown', this.listeners.keydown)
     this.baseDOM.removeEventListener('mousemove', this.listeners.mousemove)
     this.baseDOM.removeEventListener('wheel', this.listeners.wheel)
+    this.baseDOM.removeEventListener('mousedown', this.listeners.mousedown)
+    this.lastTime = undefined
   }
 }
 

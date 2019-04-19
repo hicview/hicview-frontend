@@ -158,13 +158,15 @@ class Graphics3DApplication {
     c.dampingFactor = 0.25
 
     let fpsController = new CControls(this.camera, this.renderer.domElement)
-    this.controller = fpsController
+    this.controller = orbitController
+    this.getController = ()=>{return this.controller}
     this.controllers ={
       orbit: orbitController,
       fps: fpsController
     }
   }
 
+  
   initGUIControl(){
     this.gui = new dat.GUI()
     const gui  = this.gui
@@ -189,7 +191,7 @@ class Graphics3DApplication {
 	})
 	switch (this.toggleController.controller){
 	case 'fps':
-	  //this.controller.init()
+	  this.controller.init()
 	}
       })
   }
@@ -348,13 +350,19 @@ class Graphics3DApplication {
    *
    * @memberof Graphics3DApplication
    */
-  render () {
+  render (time) {
     const r = this.renderer
     r.setClearColor(0x000000, 0)
     r.setViewport(0, 0, this.width, this.height)
     // console.log(this.updateFunctions)
     this.executeUpdateFunctions()
     r.render(this.scene, this.camera)
+    if (this.controller.update){
+
+      this.getController().update(time)
+      this.getController().camera.updateMatrixWorld()
+    
+    }
   }
 
   /**

@@ -68,11 +68,8 @@ async function testGraphics3DApp () {
   function f (time) {
    
     requestAnimationFrame(f)
-    app.render()
-    if (app.controller.update){
-      app.controller.update()
-      app.controller.camera.updateMatrixWorld()
-    }
+    app.render(time)
+    
   }
   f()
   return app
