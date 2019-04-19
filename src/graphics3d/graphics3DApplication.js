@@ -17,6 +17,8 @@ const d3 = require('d3')
 const uidv4 = require('uuid/v4')
 const stats = require('stats-js')
 const axios = require('axios')
+import { CControls } from './control/customizedControl'
+
 require('./control/orbitControl.js')
 
 /**
@@ -83,6 +85,8 @@ class Graphics3DApplication {
    */
   initScene () {
     this.scene = new THREE.Scene()
+    this.axesHelper = new THREE.AxesHelper(20)
+    this.scene.add(this.axesHelper)
   }
 
   /**
@@ -97,7 +101,8 @@ class Graphics3DApplication {
       1,
       3000
     )
-    this.camera.position.set(500, 100, 260)
+    this.camera.position.set(0, 0, 300)
+    this.camera.lookAt(0,0,0)
     this.camera.layers.enable(0)
     this.camera.layers.enable(1)
   }
@@ -113,7 +118,12 @@ class Graphics3DApplication {
     this.scene.add(this.light)
     const ctx = this
     this.addUpdateFunctions(() => {
-      ctx.light.position.copy(ctx.camera.position)
+      let x = ctx.camera
+      while(x.parent){
+	x = x.parent
+      }
+      //console.log(x.position)
+      ctx.light.position.copy(x.position)
       // console.log('Hello', ctx.light, ctx.camera)
     })
   }
@@ -139,20 +149,51 @@ class Graphics3DApplication {
    * @memberof Graphics3DApplication
    */
   initController () {
-    this.controller = new THREE.OrbitControls(this.camera, this.renderer.domElement)
-    const c = this.controller
+    let orbitController = new THREE.OrbitControls(this.camera, this.renderer.domElement)
+    const c = orbitController
     c.minDistance = 5
     c.maxDistance = 2000
     c.enablePan = false
     c.enableDamping = true
     c.dampingFactor = 0.25
+
+    let fpsController = new CControls(this.camera, this.renderer.domElement)
+    this.controller = orbitController
+    this.getController = ()=>{return this.controller}
+    this.controllers ={
+      orbit: orbitController,
+      fps: fpsController
+    }
   }
 
+  
   initGUIControl(){
     this.gui = new dat.GUI()
+    const gui  = this.gui
 //    this.baseDOM.appendChild(this.gui.domElement)
-    this.gui.addFolder('Chromosomes')
-    this.gui.addFolder('Chrom Colors')
+    gui.addFolder('Chromosomes')
+    gui.addFolder('Chrom Colors')
+    gui.addFolder('Camera Types')
+    const app = this
+    this.toggleController = {
+      controller: 'orbit'
+    }
+    gui.__folders['Camera Types']
+      .add(this.toggleController,'controller', ['orbit','fps'])
+      .name('Toggle Control')
+      .onChange(()=>{
+	this.controller = this.controllers[this.toggleController.controller]
+	this.controller.enabled = true
+	Object.keys(this.controllers).forEach(k=>{
+	  if (k!== this.toggleController.controller){
+	    this.controllers[k].enabled = false
+	  }
+	})
+	switch (this.toggleController.controller){
+	case 'fps':
+	  this.controller.init()
+	}
+      })
   }
  
   /// //////////////////////////////////////////////////////////////////////////
@@ -309,13 +350,19 @@ class Graphics3DApplication {
    *
    * @memberof Graphics3DApplication
    */
-  render () {
+  render (time) {
     const r = this.renderer
     r.setClearColor(0x000000, 0)
     r.setViewport(0, 0, this.width, this.height)
     // console.log(this.updateFunctions)
     this.executeUpdateFunctions()
     r.render(this.scene, this.camera)
+    if (this.controller.update){
+
+      this.getController().update(time)
+      this.getController().camera.updateMatrixWorld()
+    
+    }
   }
 
   /**

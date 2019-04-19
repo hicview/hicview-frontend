@@ -27,3 +27,9 @@ npx webpack-dev-server
 http-server --cors -a localhost # Please allow CORS and run in localhost
 #+END_SRC
 
+* Generating Docs
+
+** JsDoc
+ #+BEGIN_SRC sh
+ jsdoc -c tooling/jsdoc.json
+ #+END_SRC
