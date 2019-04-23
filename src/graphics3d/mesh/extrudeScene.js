@@ -1,5 +1,5 @@
 /*
- * @Description: 
+ * @Description:
  * @Author: Hongpeng Ma
  * @Github: gitlab.com/hongpengm
  * @Date: 2019-03-29 02:24:30
@@ -18,7 +18,7 @@ for (let i = 0; i < count; i++) {
 }
 const defaultExtrudeShape = new THREE.Shape(pts)
 
-const circle = function(radius=3, count=30){
+const circleShape = function (radius = 3, count = 30) {
   let pts = []
   for (let i = 0; i < count; i++) {
     let a = 2 * i / count * Math.PI
@@ -40,10 +40,10 @@ class ExtrudeScene {
     })
     let { options } = parsedArgs
     this.options = options
-    let {shape, divisions} = options
+    let { shape, divisions } = options
     let extrudePath = new THREE.CatmullRomCurve3(points)
-    if (shape === 'circle'){
-      shape = circle(options.radius, options.shapeDivisions)
+    if (shape === 'circle') {
+      shape = circleShape(options.radius, options.shapeDivisions)
     }
     let extrudeSettings = {
       steps: points.length * divisions,
@@ -58,9 +58,10 @@ class ExtrudeScene {
     this.renderLength = this.length * divisions
     this.mesh = mesh
   }
-  changeColor(color){
+  changeColor (color) {
     this.mesh.material.color.setHex(color)
   }
 }
 
-export { ExtrudeScene }
+export { ExtrudeScene,
+  circleShape }
