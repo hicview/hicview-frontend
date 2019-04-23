@@ -21,6 +21,25 @@ class GeneticElement {
     const { shape, radius, shapeDivisions, divisions} = options
     // create a base geometry for a single genetic element
     this.baseGeometry = this.createExtrudeGeometry()
+    /*
+      TODO
+      Given genetic elements' positions on chromsomes & colors
+      Return a mesh of all genetic elements on one chromosomes
+      --------------------
+      genetic elements' positions data format
+      [
+        {
+	  local: Vector3, // translation vector to a local coordinate
+	  lookAt: Vector3, // direction vector to of this g.e.
+	  color: Color // color of this g.e.
+	},...
+      ]
+      --------------------
+      return:
+      a mesh object // THREE.Mesh
+      --------------------
+      Genetic element information is dealt in GenomeScene
+    */
     this.bufferGeometry = new THREE.BufferGeometry()
     let tRadius = 125
     let count = 80
@@ -77,7 +96,8 @@ class GeneticElement {
 			       this.material)
     
   }
-
+  // TODO
+  // Create extrude geometry with specific base length and memorize them
   createExtrudeGeometry() {
     let points = []
     points.push(new THREE.Vector3(0,0,0))
