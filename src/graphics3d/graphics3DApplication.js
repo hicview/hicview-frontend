@@ -9,7 +9,8 @@ import { createDOM, shiftDOM } from '../utils/DOM'
 import { GenomeScene } from './mesh/genomeScene'
 import { LineScene } from './mesh/lineScene'
 import { ExtrudeScene } from './mesh/extrudeScene'
-import { Chrom3DModel } from './model/genomeModel.js'
+import { GeneticElement } from './mesh/geneticElement'
+import { Chrom3DModel } from './model/genomeModel'
 import * as dat from 'dat.gui'
 'use strict'
 const THREE = require('three')
@@ -244,7 +245,10 @@ class Graphics3DApplication {
     //   chr_.matLine.resolution.set(this.width,this.height)
     // })
   }
-
+  addTestGeneticElement (){
+    //let ge = new GeneticElement()
+    //this.scene.add(ge.mesh)
+  }
   /**
    * Add a test genome
    *
@@ -259,6 +263,7 @@ class Graphics3DApplication {
     })
     genomeScene.setResolution(this.width, this.height)
     genomeScene.loadGenomeMesh()
+    genomeScene.loadTestGeneticElements()
     let testColor = new THREE.Color()
     testColor.setHSL(0.8, 1, 0.5)
     genomeScene.setChromHighlight('1', 0.3, 0.7, testColor)
