@@ -54,12 +54,17 @@ class ExtrudeScene {
     let material = new THREE.MeshLambertMaterial({ color: matColor.getHex(), wireframe: false })
     let mesh = new THREE.Mesh(geometry, material)
     this.points = points
+    this.extrudePath = extrudePath
     this.length = points.length
     this.renderLength = this.length * divisions
     this.mesh = mesh
   }
   changeColor (color) {
     this.mesh.material.color.setHex(color)
+  }
+  getPoint (pos) { // float
+    console.log(pos)
+    return this.extrudePath.getPoint(pos)
   }
 }
 

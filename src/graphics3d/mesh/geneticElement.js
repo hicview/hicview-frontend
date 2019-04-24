@@ -4,12 +4,12 @@ import { argsParser }  from '../../utils/args'
 import { circleShape } from './extrudeScene'
 
 class GeneticElement {
-  constructor (positions, args) {
+  constructor (gePositions, args) {
 
     //    TorusGeometry(radius : Float, tube : Float, radialSegments : Integer, tubularSegments : Integer, arc : Float)
     let optionsDefault = {
       shape: 'circle',
-      radius: 0.75,
+      radius: 1.75,
       shapeDivisions: 30,
       divisions: 1
     }
@@ -41,32 +41,30 @@ class GeneticElement {
       Genetic element information is dealt in GenomeScene
     */
     this.bufferGeometry = new THREE.BufferGeometry()
+    
     let tRadius = 125
     let count = 80
-    let tPositions = []
+    let positions = []
     let normals = []
     let colors = []
     let color = new THREE.Color()
     let vector = new THREE.Vector3()
     let geometry = new THREE.Geometry()
-    for ( let i = 1, l = count; i <= l ; i ++ ) {
-      let phi = Math.acos( - 1 + ( 2 * i ) / l )
-      let theta = Math.sqrt( l * Math.PI ) * phi
-      vector.setFromSphericalCoords( tRadius, phi, theta )
-      geometry.copy( this.baseGeometry )
-      geometry.lookAt( vector )
-      geometry.translate( vector.x, vector.y, vector.z )
-      color.setHSL( ( i / l ), 1.0, 0.7 )
+
+    gePositions.forEach(d=>{
+      geometry.copy(this.createExtrudeGeometry())
+      geometry.lookAt(d.lookAt)
+      geometry.translate(d.local.x, d.local.y, d.local.z)
       geometry.faces.forEach( function ( face ) {
-	tPositions.push( geometry.vertices[ face.a ].x )
-	tPositions.push( geometry.vertices[ face.a ].y )
-	tPositions.push( geometry.vertices[ face.a ].z )
-	tPositions.push( geometry.vertices[ face.b ].x )
-	tPositions.push( geometry.vertices[ face.b ].y )
-	tPositions.push( geometry.vertices[ face.b ].z )
-	tPositions.push( geometry.vertices[ face.c ].x )
-	tPositions.push( geometry.vertices[ face.c ].y )
-	tPositions.push( geometry.vertices[ face.c ].z )
+	positions.push( geometry.vertices[ face.a ].x )
+	positions.push( geometry.vertices[ face.a ].y )
+	positions.push( geometry.vertices[ face.a ].z )
+	positions.push( geometry.vertices[ face.b ].x )
+	positions.push( geometry.vertices[ face.b ].y )
+	positions.push( geometry.vertices[ face.b ].z )
+	positions.push( geometry.vertices[ face.c ].x )
+	positions.push( geometry.vertices[ face.c ].y )
+	positions.push( geometry.vertices[ face.c ].z )
 	normals.push( face.normal.x )
 	normals.push( face.normal.y )
 	normals.push( face.normal.z )
@@ -86,8 +84,47 @@ class GeneticElement {
 	colors.push( color.g )
 	colors.push( color.b )
       } )
-    }
-    this.bufferGeometry.addAttribute( 'position', new THREE.Float32BufferAttribute( tPositions, 3 ) )
+    })
+    
+//    for ( let i = 1, l = count; i <= l ; i ++ ) {
+//      let phi = Math.acos( - 1 + ( 2 * i ) / l )
+//      let theta = Math.sqrt( l * Math.PI ) * phi
+//      vector.setFromSphericalCoords( tRadius, phi, theta )
+//      geometry.copy( this.baseGeometry )
+//      geometry.lookAt( vector )
+//      geometry.translate( vector.x, vector.y, vector.z )
+//      color.setHSL( ( i / l ), 1.0, 0.7 )
+//      geometry.faces.forEach( function ( face ) {
+//	positions.push( geometry.vertices[ face.a ].x )
+//	positions.push( geometry.vertices[ face.a ].y )
+//	positions.push( geometry.vertices[ face.a ].z )
+//	positions.push( geometry.vertices[ face.b ].x )
+//	positions.push( geometry.vertices[ face.b ].y )
+//	positions.push( geometry.vertices[ face.b ].z )
+//	positions.push( geometry.vertices[ face.c ].x )
+//	positions.push( geometry.vertices[ face.c ].y )
+//	positions.push( geometry.vertices[ face.c ].z )
+//	normals.push( face.normal.x )
+//	normals.push( face.normal.y )
+//	normals.push( face.normal.z )
+//	normals.push( face.normal.x )
+//	normals.push( face.normal.y )
+//	normals.push( face.normal.z )
+//	normals.push( face.normal.x )
+//	normals.push( face.normal.y )
+//	normals.push( face.normal.z )
+//	colors.push( color.r )
+//	colors.push( color.g )
+//	colors.push( color.b )
+//	colors.push( color.r )
+//	colors.push( color.g )
+//	colors.push( color.b )
+//	colors.push( color.r )
+//	colors.push( color.g )
+//	colors.push( color.b )
+//      } )
+//    }
+    this.bufferGeometry.addAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) )
     this.bufferGeometry.addAttribute( 'normal', new THREE.Float32BufferAttribute( normals, 3 ) )
     this.bufferGeometry.addAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) )
 
@@ -98,10 +135,29 @@ class GeneticElement {
   }
   // TODO
   // Create extrude geometry with specific base length and memorize them
-  createExtrudeGeometry() {
+  createExtrudeGeometry(length=undefined) {
+    // Create a length-baseGeometry hash if not exist
+    if ( this.existGeometries === undefined){
+      this.existGeometries = {}
+    }
+    // If the required were created, return the required object
+    if (length === undefined){
+      if (this.existGeometries.hasOwnProperty('undefined')){
+	return this.existGeometries.undefined
+      }
+    } else {
+      if (this.existGeometries.hasOwnProperty(length.toString())){
+	return this.existGeometries[length.toString()]
+      }
+    }
+
+
+    // Create required object and save to hash
     let points = []
     points.push(new THREE.Vector3(0,0,0))
-    points.push(new THREE.Vector3(0,0,1))
+    points.push(new THREE.Vector3(0,0,
+				  length === undefined ?
+				  2 : length))   
     const extrudePath = new THREE.CatmullRomCurve3(points)
     const extrudeSettings = {
       steps: 100,
@@ -116,6 +172,9 @@ class GeneticElement {
 	extrudeSettings
       )
     }
+    this.existGeometries[length === undefined
+			 ? 'undefined'
+			 : length.toString()] = geometry
     return geometry
   }
   

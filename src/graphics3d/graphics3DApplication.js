@@ -246,8 +246,8 @@ class Graphics3DApplication {
     // })
   }
   addTestGeneticElement (){
-    let ge = new GeneticElement()
-    this.scene.add(ge.mesh)
+    //let ge = new GeneticElement()
+    //this.scene.add(ge.mesh)
   }
   /**
    * Add a test genome
@@ -263,6 +263,7 @@ class Graphics3DApplication {
     })
     genomeScene.setResolution(this.width, this.height)
     genomeScene.loadGenomeMesh()
+    genomeScene.loadTestGeneticElements()
     let testColor = new THREE.Color()
     testColor.setHSL(0.8, 1, 0.5)
     genomeScene.setChromHighlight('1', 0.3, 0.7, testColor)
