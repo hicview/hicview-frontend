@@ -10,6 +10,7 @@ import { GenomeScene } from './mesh/genomeScene'
 import { LineScene } from './mesh/lineScene'
 import { ExtrudeScene } from './mesh/extrudeScene'
 import { GeneticElement } from './mesh/geneticElement'
+import { InteractionLine } from './mesh/interactionLine'
 import { Chrom3DModel } from './model/genomeModel'
 import * as dat from 'dat.gui'
 'use strict'
@@ -88,6 +89,7 @@ class Graphics3DApplication {
     this.scene = new THREE.Scene()
     this.axesHelper = new THREE.AxesHelper(20)
     this.scene.add(this.axesHelper)
+    this.scene.background = new THREE.Color( 0xf0f0f0 );
   }
 
   /**
@@ -248,6 +250,21 @@ class Graphics3DApplication {
   addTestGeneticElement (){
     //let ge = new GeneticElement()
     //this.scene.add(ge.mesh)
+  }
+
+  addTestInteractionLine(){
+    let testIL = new InteractionLine()
+    console.log(testIL.mesh, this.width, this.height)
+   
+    this.addUpdateFunctions(()=>{
+      if(testIL.mesh.material.resolution){
+	testIL.mesh.material.resolution.set(this.width, this.height)
+      }
+    })
+    this.genomeScene.baseObject.add(testIL.mesh)
+    testIL.scene = this.genomeScene.baseObject
+    testIL.loadText(this.genomeScene.baseObject)
+    
   }
   /**
    * Add a test genome

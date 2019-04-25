@@ -63,7 +63,6 @@ class ExtrudeScene {
     this.mesh.material.color.setHex(color)
   }
   getPoint (pos) { // float
-    console.log(pos)
     return this.extrudePath.getPoint(pos)
   }
 }
