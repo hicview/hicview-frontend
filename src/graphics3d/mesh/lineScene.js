@@ -148,7 +148,7 @@ class LineScene {
   updateFunctions () {
     return () => { this.matLine.resolution.set(this.resWidth, this.resHeight) } // resolution of the viewport
   }
-  destroy () {
+  dispose () {
     this.geometry.dispose()
     this.material.dispose()
   }

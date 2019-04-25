@@ -61,10 +61,11 @@ async function main () {
 
 async function testGraphics3DApp () {
   let app = new Graphics3DApplication(document.body)
-  app.addTestSphere(0, 0, 0)
+  //app.addTestSphere(0, 0, 0)
   //app.addTestGeneticElement()
-//  await app.addTestLine()
+  //  await app.addTestLine()
   await app.addTestGenome()
+  app.addTestInteractionLine()
 
   function f (time) {
    
