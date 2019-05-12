@@ -32,13 +32,20 @@ class Graphics2DApplication {
    * @memberof Graphics2DApplication
    */
   constructor (parentDOM) {
-    this.baseDOM = createDOM('div', uidv4(), 1002, 999)
+    this.baseDOM = createDOM('div', uidv4(), 1000, 1000)
     d3.select(this.baseDOM).attr('class', 'base')
     parentDOM.appendChild(this.baseDOM)
 
-    var btn = document.createElement('button') //生成button
+    // use `let` rather than `var` please
+    let btn = document.createElement('button') //生成button
     btn.setAttribute('onclick', 'hello()')    //绑定响应
     this.baseDOM.appendChild(btn)    // 绑定到文档树
+
+    let btn2 = createDOM('button', uidv4(), 100,100, {top: -100})
+    //shiftDOM(btn2, -100, 0)
+    btn2.onclick = hello
+    this.baseDOM.appendChild(btn2)
+    
     this.topTrack = []
     this.bottomTrack = []
     this.leftTrack = []
