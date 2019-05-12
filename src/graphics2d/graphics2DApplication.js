@@ -15,6 +15,10 @@ const G2D_HORIZONTAL1D_WIDTH = 600
 const G2D_HORIZONTAL1D_HEIGHT = 100
 const G2D_HEATMAP2D_WIDTH = 600
 const G2D_HEATMAP2D_HEIGHT = 600
+
+function hello() {
+  alert('hello')
+}
 /**
  *
  *
@@ -28,9 +32,13 @@ class Graphics2DApplication {
    * @memberof Graphics2DApplication
    */
   constructor (parentDOM) {
-    this.baseDOM = createDOM('div', uidv4(), 1000, 1000)
+    this.baseDOM = createDOM('div', uidv4(), 1002, 999)
     d3.select(this.baseDOM).attr('class', 'base')
     parentDOM.appendChild(this.baseDOM)
+
+    var btn = document.createElement('button') //生成button
+    btn.setAttribute('onclick', 'hello()')    //绑定响应
+    this.baseDOM.appendChild(btn)    // 绑定到文档树
     this.topTrack = []
     this.bottomTrack = []
     this.leftTrack = []
