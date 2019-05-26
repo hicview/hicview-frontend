@@ -1,0 +1,104 @@
+* Hi-C View Architecture Design
+
+
+* Concepts
+
+** Components & Stage
+   
+   Components are the basic elements in Hi-C View framework. Components has two types: data-type and view-type. Data-type stores biological data. View-type transform data-type components to what can be loaded to stage and visualize.
+   
+   Stages are what researchers view and interact with. It could render different type of stages and can load components of both data-type and view-type.
+   
+
+** State Arrays
+
+   State Arrays is stores different stages & components state. Shifting from a timestamp to another is the changing state of available stagee.
+
+TS: timestamp
+
+   TS 1        TS 2       TS 3        TS 4 
+
+   ------------------------------------------------------------>
+
+  \ | ---------> |
+
+      StateShiftTimeStamp(src_ts, dest_ts)
+
+   State Arrays could represent different states at the same time or represent a time series sequence.
+
+** Entries & Pipelines
+   
+   Pipelines deal with the data flow. It can modified data format, merge data from different sources, compare different data and do the calculation.
+
+   A brief image:
+
+  Entry Data 1 ---
+
+                   \
+
+  Entry Data 2 -----\                                                                                |Under Stage|
+
+                      ----> Pipeline ---> Processed Data --> State Arrays --> d-type Components -->  v-type Components --> Stages --> Visualization
+
+  Entry Data 3 -----/
+
+                   /
+
+   ....   --------
+
+** Element Rendering 
+
+
+** Life Cycles
+
+*** Components Life Cycles (Components live in stages)
+ \            |         Render phase (No side effect) |  Commit phase (update DOM)
+
+                              ----------      --------     ---------
+   Mounting -> constructor -> | Get    |  --> |      | --> |       | --> ComponentDidMountToStage
+  \                           | Derived|      |Render|     | Update|
+  \                           | State  |      |      |     | DOM   |
+  \                           | From   |      |      |     |       |
+   Updating -> props, state,->| Props  |  --> |      | --> |       | --> ComponentDidUpdateInStage
+               force update   |        |      |      |     |       |
+  \                           |--------|      |------|     |-------|
+
+   Unmounting  --------------------------------------------------------> ComponentWillUnmountFromStage
+
+*** Stage Life Cycles 
+
+   
+   Initialize -> constructor ->|-------|  ->  |-------| ->  StageDidInitialize   
+  \                            |Get    |      |Animate|    
+  \                            |State  |      |       |    
+   Updating   -> components, ->|From   |  ->  |       | ->  StageDidUpdate  
+                 state,        |Props  |      |       |    
+                 force update  |-------|      |-------|    
+                               
+   Disposing  -------------------------------------------> StageWillDispose
+
+** Event Handling
+
+   Event Handling is handled by eventEngine, 
+
+
+
+
+** Kit
+   
+   A kit is a collection of different stages. For example, if you get 1D, 2D and 3D stages, and you want to reuse this collection in other project or analysis. You could simply create a new kit to reuse it.
+
+
+* Principles
+
+** Data flow is single direction
+
+** Pipelines modified data flow
+
+** Stage has a single state
+
+** Stage only control how to render data, not control HTML/CSS staff
+
+
+* Design Documentation
+

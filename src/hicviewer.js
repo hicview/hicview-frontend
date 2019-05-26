@@ -161,7 +161,7 @@ function testGraphics2DApp () {
       behaviour: 'zoom'
     })
   app.add2DTrack({
-    loadURL: 'http://localhost:8080/asset/test.png',
+    loadURL: 'http://localhost:8080/asset/test 2.png',
     behaviour: 'brush'
   })
   app.syncTrackAlignment()
