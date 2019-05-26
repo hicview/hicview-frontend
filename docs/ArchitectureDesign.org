@@ -71,8 +71,8 @@ TS: timestamp
    Initialize -> constructor ->|-------|  ->  |-------| ->  StageDidInitialize   
   \                            |Get    |      |Animate|    
   \                            |State  |      |       |    
-   Updating   -> components, ->|       |  ->  |       | ->  StageDidUpdate  
-                 state,        |       |      |       |    
+   Updating   -> components, ->|From   |  ->  |       | ->  StageDidUpdate  
+                 state,        |Props  |      |       |    
                  force update  |-------|      |-------|    
                                
    Disposing  -------------------------------------------> StageWillDispose
