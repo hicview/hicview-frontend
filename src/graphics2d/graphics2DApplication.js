@@ -15,6 +15,10 @@ const G2D_HORIZONTAL1D_WIDTH = 600
 const G2D_HORIZONTAL1D_HEIGHT = 100
 const G2D_HEATMAP2D_WIDTH = 600
 const G2D_HEATMAP2D_HEIGHT = 600
+
+function hello() {
+  alert('hello')
+}
 /**
  *
  *
@@ -31,6 +35,17 @@ class Graphics2DApplication {
     this.baseDOM = createDOM('div', uidv4(), 1000, 1000)
     d3.select(this.baseDOM).attr('class', 'base')
     parentDOM.appendChild(this.baseDOM)
+
+    // use `let` rather than `var` please
+    let btn = document.createElement('button') //生成button
+    btn.setAttribute('onclick', 'hello()')    //绑定响应
+    this.baseDOM.appendChild(btn)    // 绑定到文档树
+
+    let btn2 = createDOM('button', uidv4(), 100,100, {top: -100})
+    //shiftDOM(btn2, -100, 0)
+    btn2.onclick = hello
+    this.baseDOM.appendChild(btn2)
+    
     this.topTrack = []
     this.bottomTrack = []
     this.leftTrack = []
