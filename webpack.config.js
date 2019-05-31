@@ -4,7 +4,7 @@ const webpack = require('webpack')
 
 module.exports = {
   mode: 'development',
-  entry: ['babel-polyfill', './src/hicviewer.js'],
+  entry: ['babel-polyfill', './src/index.js'],
 
   // Use brfs & transform-loader to use 'fs' module in the front pages
   // Because browser access problem, 'fs' cannot used to read file in

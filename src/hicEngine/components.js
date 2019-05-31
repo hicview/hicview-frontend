@@ -23,7 +23,8 @@ class Component {
   }
 
   setState(){
-    
+
+    return this
   }
 
   getDrivedStateFromProps(){

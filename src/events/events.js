@@ -37,7 +37,12 @@ class HiCEvent {
     } else {
       this[name] = val
     }
-
+    // For cascading add attr
+    /*
+      event
+      .attr(a, b)
+      .attr(c, d)
+     */
     return this
   }
 }
