@@ -8,7 +8,7 @@
 						"build": "react-scripts build",
 						"test": "react-scripts test",
 						"eject": "react-scripts eject",
-						"test-webpack": "mocha-webpack --webpack-config webpack.config.js --require test/setup.js test/**/*.spec.js",
+						"test-webpack": "mocha-webpack --webpack-config webpack.config.js --require src/test/setup.js src/test/**/*.test.js",
 						"dev": "webpack-dev-server",
 						"builddoc": "jsdoc -c tooling/jsdoc.json"
 			},
@@ -19,6 +19,7 @@
 						"@babel/core": "^7.4.5",
 						"@babel/preset-env": "^7.4.5",
 						"@babel/preset-react": "^7.0.0",
+						"@babel/register": "^7.4.4",
 						"babel-core": "^6.26.3",
 						"babel-loader": "^8.0.6",
 						"babel-polyfill": "^6.26.0",
@@ -36,7 +37,9 @@
 						"eslint-plugin-standard": "^4.0.0",
 						"jsdoc-babel": "^0.5.0",
 						"jsdoc-to-markdown": "^4.0.1",
-						"webpack": "^4.32.2",
+						"mocha": "^6.1.4",
+						"mocha-webpack": "^1.1.0",
+						"webpack": "^4.34.0",
 						"webpack-cli": "^3.3.2",
 						"webpack-dev-server": "^3.4.1"
 			},

@@ -1,2 +1,8 @@
-+src
++.
+-Human
+-asset
+-dist
+-docs
 -node_modules
+!package.json
+!webpack.config.js
