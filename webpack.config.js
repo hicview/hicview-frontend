@@ -4,7 +4,7 @@ const webpack = require('webpack')
 
 module.exports = {
   mode: 'development',
-  entry: ['./src/index.js'],
+  entry: ['./src/hicviewer.js'],
 
   // Use brfs & transform-loader to use 'fs' module in the front pages
   // Because browser access problem, 'fs' cannot used to read file in
@@ -20,7 +20,7 @@ module.exports = {
 	  loader: 'babel-loader',
 	  options: {
 	    presets: ['@babel/preset-env', '@babel/preset-react'],
-	    plugins: []
+	    plugins: [ "@babel/plugin-transform-runtime"]
 	  }
 	},
         
@@ -42,15 +42,15 @@ module.exports = {
     compress: true,
     port: 7777
   },
-  resolve: {
-    alias: {
-      'three/OrbitControls': path.join(__dirname, 'node_modules/three/examples/js/controls/OrbitControls.js')
-    }
-  },
-  plugins: [
-    new webpack.ProvidePlugin({
-      'THREE': 'three'
-    })
-  ]
+  //resolve: {
+  //  alias: {
+  //    'three/OrbitControls': path.join(__dirname, 'node_modules/three/examples/js/controls/OrbitControls.js')
+  //  }
+  //},
+  //plugins: [
+  //  new webpack.ProvidePlugin({
+  //    'THREE': 'three'
+  //  })
+  //]
 
 }
