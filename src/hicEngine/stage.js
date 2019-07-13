@@ -162,7 +162,6 @@ class Stage {
       case 'dispose':
 	this.__lifecycle__ = 'dispose'
 	this.__nextLifecycle__()
-	break
       default:
 	throw 'Unknown signal'
       }
@@ -288,6 +287,7 @@ class Stage {
 }
 
 Stage.updateLifecycle = function () {
+  console.log(Stage.instances)
   Object.keys(Stage.instances).forEach((k)=>{
     Stage.instances[k].instance.__lifecycleUpdate__()
   })

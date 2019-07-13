@@ -23,6 +23,6 @@ function main(){
 
 
   let s1 = new Stage()
-  
+  Stage.updateLifecycle()
   console.log(Stage.instances);
 }
