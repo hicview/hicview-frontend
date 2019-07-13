@@ -42,7 +42,8 @@ class Stage {
   }
 
   init() {
-    this.baseDom = grid.creatDom('div', {tag: this.type})
+    this.baseDom = grid.createDom('div',{top: 20},{left: 20},{width:30},{height: 40}, {tag: this.type})
+    document.body.appendChild(this.baseDom)
   }
   
   setState(){
@@ -83,11 +84,11 @@ class Stage {
   }
 
   __lifecycleUpdate__() {
+    console.log(this.__lifecycle__, this.__signal__)
     switch(this.__lifecycle__){
     case 'unknown':
       switch(this.__signal__) {
       case 'init':
-	this.__init__()
 	this.__nextLifecycle__()
 	break
       case 'dispose':
@@ -161,6 +162,7 @@ class Stage {
       case 'dispose':
 	this.__lifecycle__ = 'dispose'
 	this.__nextLifecycle__()
+	break
       default:
 	throw 'Unknown signal'
       }
@@ -170,6 +172,7 @@ class Stage {
       case 'dispose':
 	this.__lifecycle__ = 'willDispose'
 	this.__dispose__()
+	break
       default:
 	throw 'Unknown signal'
       }
@@ -283,6 +286,14 @@ class Stage {
     
   }
 }
+
+Stage.updateLifecycle = function () {
+  Object.keys(Stage.instances).forEach((k)=>{
+    Stage.instances[k].instance.__lifecycleUpdate__()
+  })
+  requestAnimationFrame(Stage.updateLifecycle)
+}
+
 
 class Stage1D extends Stage{
   constructor(){
