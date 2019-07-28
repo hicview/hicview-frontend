@@ -1,5 +1,6 @@
+#+macro: travis [[https://travis-ci.org/hicview/hicview-frontend][https://travis-ci.org/hicview/hicview-frontend.svg?branch=master]]
 
-
+{{{travis}}}
 * Readme in other languages
 
   [[./readme_CN.org][Chinese]]
@@ -114,7 +115,7 @@ http-server --cors -a localhost # Please allow CORS and run in localhost
 const {defaults} = require('jest-config')
 const babelSettings = require('./babel.config.js')
 module.exports = {
-  "rootDir": ".",
+  "rootDir": "test",
 //  ...babelSettings,
   "transform": {
     // Transform js codes
