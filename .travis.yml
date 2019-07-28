@@ -1,7 +1,7 @@
 sudo: false
 language: node_js
 node_js:
-- '10'
+- '11'
 branches:
   only:
   - master
@@ -13,4 +13,4 @@ before_install:
 install:
 - npm install
 script:
-- npm run test
+- ls && npm run test

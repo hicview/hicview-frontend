@@ -99,6 +99,45 @@ http-server --cors -a localhost # 打开CORS跨域请求并在localhost地址启
     #+END_SRC
 
 
+* 单元测试
+
+** 测试框架 Jest
+   HiCView 使用 [[https://jestjs.io/][`Jest`]] 完成对JavaScript和TypeScript的单元测试，完整的Jest配置文件如下。
+
+ #+BEGIN_SRC js
+const {defaults} = require('jest-config')
+const babelSettings = require('./babel.config.js')
+module.exports = {
+  "rootDir": ".",
+//  ...babelSettings,
+  "transform": {
+    // Transform js codes
+    "^.+\\.jsx?$": "babel-jest",
+    // Transform ts codes
+    "^.+\\.tsx?$": "ts-jest"
+  },
+  // Mock for PIXI.js canvas
+  /*
+
+    #Developer's Notes
+    --------------------
+    Currently `jest-webgl-canvas-mock is the only package that supports both webgl and canvas mock, which enables us to test `PIXI.js`. For canvas only mock, it's recommended to use `jest-canvas-mock`. For webgl only mock, it's recommended to use `webgl-mock` package.
+    
+                         By Kevin M 2019-07-28
+   */
+  "setupFiles": ["jest-webgl-canvas-mock"],
+  "testRegex": "(/test/.*|(\\.|/)(test|spec))\\.(ts|js)x?$",  
+  moduleFileExtensions:[...defaults.moduleFileExtensions, 'ts', 'tsx']
+
+}
+
+   #+END_SRC
+
+** 持续集成
+   
+   HiCView 使用Travis CI 完成持续集成, 见`./.travis.yml`文件
+
+
 * 一些规定
 
 ** 强类型检查
@@ -106,3 +145,4 @@ http-server --cors -a localhost # 打开CORS跨域请求并在localhost地址启
    HiCView 使用TypeScript来确保强类型检查。强类型检查讲确保使用的对象符合声明的接口
 
    原则是尽可能使用TypeScript来编写代码.
+
