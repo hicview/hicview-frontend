@@ -1,7 +1,7 @@
 const {defaults} = require('jest-config')
 const babelSettings = require('./babel.config.js')
 module.exports = {
-  "rootDir": ".",
+  "rootDir": "test",
 //  ...babelSettings,
   "transform": {
     // Transform js codes

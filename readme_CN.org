@@ -1,3 +1,7 @@
+#+macro: travis [[https://travis-ci.org/hicview/hicview-frontend][https://travis-ci.org/hicview/hicview-frontend.svg?branch=master]]
+
+{{{travis}}}
+
 * 文档（待更新）
  详见Please see [[https://hicview.github.io/hicview-frontend/]]
 
@@ -108,7 +112,7 @@ http-server --cors -a localhost # 打开CORS跨域请求并在localhost地址启
 const {defaults} = require('jest-config')
 const babelSettings = require('./babel.config.js')
 module.exports = {
-  "rootDir": ".",
+  "rootDir": "test",
 //  ...babelSettings,
   "transform": {
     // Transform js codes
