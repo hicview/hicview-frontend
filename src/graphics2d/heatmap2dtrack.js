@@ -31,8 +31,10 @@ class Heatmap2DTrack extends EventEmitter {
   constructor (parentDOM) {
     super()
     this.initBBox(parentDOM)
-    this.app = new PIXI.Application(this.width, this.height,
+    this.app = new PIXI.Application(
       {
+	width:this.width,
+	height: this.height,
         backgroundColor: 0xffffff
       })
 

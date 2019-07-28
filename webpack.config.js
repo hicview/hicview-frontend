@@ -4,45 +4,44 @@ const webpack = require('webpack')
 
 module.exports = {
   mode: 'development',
-  entry: ['babel-polyfill', './src/index.js'],
+  entry: ['./src/hicviewer.js'],
 
-  // Use brfs & transform-loader to use 'fs' module in the front pages
-  // Because browser access problem, 'fs' cannot used to read file in
-  // the frontend. 'brfs' is a 'browserify' plugin that partially solves
-  // this problem by read file in the building stage.
 
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader'
+	use: {
+	  loader: 'babel-loader',
+	  options: {
+	    presets: ['@babel/preset-env', '@babel/preset-react'],
+	    plugins: [ "@babel/plugin-transform-runtime"]
+	  }
+	},
+        
+	
+      },
+      {
+	test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
       }
-      //      {
-      //        test: /\hicviewer.js$/,
-      //        loader: "transform-loader?brfs"
-      //      },
+ 
 
     ]
+  },
+  resolve:{
+     extensions: [ '.tsx', '.ts', '.js' ]
   },
   output: {
     filename: 'main.js',
     path: path.resolve(__dirname, 'dist')
   },
+  // Development Server
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
     port: 7777
   },
-  resolve: {
-    alias: {
-      'three/OrbitControls': path.join(__dirname, 'node_modules/three/examples/js/controls/OrbitControls.js')
-    }
-  },
-  plugins: [
-    new webpack.ProvidePlugin({
-      'THREE': 'three'
-    })
-  ]
-
 }

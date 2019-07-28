@@ -1,6 +1,5 @@
 'use strict'
 // import * as THREE from 'three';
-import 'babel-polyfill'
 import * as PIXI from 'pixi.js'
 import { PIXIBlock } from './graphics2d/pixiBlock'
 // const {PIXIBlock, Block} = require('./graphics2d/block.js')

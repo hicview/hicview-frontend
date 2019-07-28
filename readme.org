@@ -1,12 +1,29 @@
-* Documentation
+
+
+* Readme in other languages
+
+  [[./readme_CN.org][Chinese]]
+
+* Documentation (To be updated very soon)
 Please see [[https://hicview.github.io/hicview-frontend/]]
 
 * Setting up the environment
 
 ** Dependencies
-   HiCView-frontend require a javascript environment, which normally can be obtained from nodejs.
-   node > 10 
+   HiCView-frontend require a JavaScript & TypeScript environment, which normally can be obtained from NodeJS.
+
+#+BEGIN_SRC lang
+   node
    npm 
+   npx
+#+END_SRC
+
+   
+*** Recommended Global Package for developers
+    #+BEGIN_SRC lang
+    typescript eslint tslint http-server webpack 
+    #+END_SRC
+
 ** Running the app in localhost
 
 *** Install the dependencies
@@ -33,3 +50,67 @@ http-server --cors -a localhost # Please allow CORS and run in localhost
  #+BEGIN_SRC sh
  jsdoc -c tooling/jsdoc.json
  #+END_SRC
+
+
+* Project Architecture 
+
+** Directory Structure
+   
+*** Source Code Directory
+
+    `src/ts` directory contains all codes written in TypeScript
+
+    `src/js` directory contains all codes written in JavaScript
+
+    `src/ts/types` directory contains all interfaces, interface support strong type checks
+
+    `test/ts` directory contains all unittest for TypeScript codes
+
+    `test/js` directory contains all unittest for JavaScript codes
+
+
+    #+BEGIN_SRC lang
+   ts
+   └── types
+       └── types.d.ts
+   js
+   └── hicEngine
+       ├── TADAnalyzePipeline.js
+       ├── components.js
+       ├── dataEntry.js
+       ├── engineError.js
+       ├── eventEngine.js
+       ├── grid.js
+       ├── kit.js
+       ├── math.js
+       ├── pipelines.js
+       ├── reflection.js
+       ├── settings.js
+       ├── stage.js
+       ├── stateArray.js
+       ├── symbols.js
+       └── utils.js
+    #+END_SRC
+
+*** Project Settings
+
+    #+BEGIN_SRC 
+    webpack.config.js # webpack configuration file
+    tsconfig.js # TypeScript configuration file
+    package.json  # npm package configuration file
+    package-lock.json
+    .babelrc # babel environment file
+    
+    #+END_SRC
+
+
+* Some Rules
+
+** Strong Type Checks
+
+   HiC View use TypeScript to ensure strong type checks. Strong type checks will ensure that the data obey the declared interfaces
+
+   Our principle is to migrate as much code as possible to TypeScript. 
+   
+
+   
