@@ -142,7 +142,7 @@ module.exports = {
 
 ** Continuous Integration
 
-   HiCView use Travis CI to do the CI job.
+   HiCView use Travis CI to do the CI job. See `./.travis.yml`
 
 
 
