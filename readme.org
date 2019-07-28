@@ -1,5 +1,9 @@
 
 
+* Readme in other languages
+
+  [[./readme_CN.org][Chinese]]
+
 * Documentation (To be updated very soon)
 Please see [[https://hicview.github.io/hicview-frontend/]]
 

@@ -4,7 +4,7 @@ const webpack = require('webpack')
 
 module.exports = {
   mode: 'development',
-  entry: ['./src/index.ts'],
+  entry: ['./src/hicviewer.js'],
 
 
   module: {
@@ -38,20 +38,10 @@ module.exports = {
     filename: 'main.js',
     path: path.resolve(__dirname, 'dist')
   },
+  // Development Server
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
     port: 7777
   },
-  //resolve: {
-  //  alias: {
-  //    'three/OrbitControls': path.join(__dirname, 'node_modules/three/examples/js/controls/OrbitControls.js')
-  //  }
-  //},
-  //plugins: [
-  //  new webpack.ProvidePlugin({
-  //    'THREE': 'three'
-  //  })
-  //]
-
 }
