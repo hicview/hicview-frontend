@@ -1,0 +1,108 @@
+* 文档（待更新）
+ 详见Please see [[https://hicview.github.io/hicview-frontend/]]
+
+* 配置环境
+
+** 依赖
+   
+   HiCView-frontend 需要一个可执行JavaScript和TypeScript的环境，您可以从NodeJS获取相关软件包
+
+   #+BEGIN_SRC lang
+   node
+   npm 
+   npx
+   #+END_SRC
+
+*** 向开发者推荐全局安装的软件包
+    #+BEGIN_SRC sh
+    typescript eslint tslint http-server webpack
+    #+END_SRC
+
+** 在本地运行开发模式
+
+   
+*** 安装依赖
+    #+BEGIN_SRC sh
+ npm install 
+ # 对中国的使用者，使用淘宝镜像源或其他npm镜像可以使您的安装加速
+ npm install --registry https://registry.npm.taobao.org
+    #+END_SRC
+
+*** 安装本地http服务器
+    #+BEGIN_SRC sh
+npm install -g http-server # -g 参数将会全局安装    
+    #+END_SRC
+
+*** 启动本地http服务器和webpack开发服务器
+#+BEGIN_SRC sh
+npx webpack-dev-server
+http-server --cors -a localhost # 打开CORS跨域请求并在localhost地址启动
+#+END_SRC
+
+* 生成文档
+
+** 使用JsDoc
+   #+BEGIN_SRC sh
+   jsdoc -c tooling/jsdoc.jso
+   #+END_SRC
+
+* 项目结构
+
+** 目录约定
+
+*** 源代码文件夹
+
+   `src/ts` 包含所有使用TypeScript编写的代码
+
+   `src/js` 包含所有使用JavaScript编写的代码
+
+   `src/ts/types` 包含所有接口类型，接口支持强类型检查
+
+   `test/ts` 包含所有使用TypeScript编写的单元测试
+
+   `test/js` 包含所有使用JavaScript编写的单元测试
+
+
+   #+BEGIN_SRC lang
+  
+   ts
+   └── types
+       └── types.d.ts
+   js
+   └── hicEngine
+       ├── TADAnalyzePipeline.js
+       ├── components.js
+       ├── dataEntry.js
+       ├── engineError.js
+       ├── eventEngine.js
+       ├── grid.js
+       ├── kit.js
+       ├── math.js
+       ├── pipelines.js
+       ├── reflection.js
+       ├── settings.js
+       ├── stage.js
+       ├── stateArray.js
+       ├── symbols.js
+       └── utils.js
+   #+END_SRC
+
+*** 项目设置
+
+    #+BEGIN_SRC 
+    webpack.config.js # webpack 配置文件
+    tsconfig.js # TypeScript 配置文件
+    package.json  # npm 包配置文件
+    package-lock.json
+    .babelrc # babel 环境文件
+    
+    #+END_SRC
+
+
+* 一些规定
+
+** 强类型检查
+
+   HiCView 使用TypeScript来确保强类型检查。强类型检查讲确保使用的对象符合声明的接口
+
+   原则是尽可能使用TypeScript来编写代码.

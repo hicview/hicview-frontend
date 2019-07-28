@@ -4,12 +4,8 @@ const webpack = require('webpack')
 
 module.exports = {
   mode: 'development',
-  entry: ['./src/index.js'],
+  entry: ['./src/index.ts'],
 
-  // Use brfs & transform-loader to use 'fs' module in the front pages
-  // Because browser access problem, 'fs' cannot used to read file in
-  // the frontend. 'brfs' is a 'browserify' plugin that partially solves
-  // this problem by read file in the building stage.
 
   module: {
     rules: [
@@ -25,13 +21,18 @@ module.exports = {
 	},
         
 	
+      },
+      {
+	test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
       }
-      //      {
-      //        test: /\hicviewer.js$/,
-      //        loader: "transform-loader?brfs"
-      //      },
+ 
 
     ]
+  },
+  resolve:{
+     extensions: [ '.tsx', '.ts', '.js' ]
   },
   output: {
     filename: 'main.js',
