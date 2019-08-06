@@ -1,6 +1,4 @@
-#+macro: travis [[https://travis-ci.org/hicview/hicview-frontend][https://travis-ci.org/hicview/hicview-frontend.svg?branch=master]]
-
-{{{travis}}}
+[![Build Status](https://travis-ci.org/hicview/hicview-frontend.svg?branch=master)](https://travis-ci.org/hicview/hicview-frontend)
 * Readme in other languages
 
   [[./readme_CN.org][Chinese]]

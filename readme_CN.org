@@ -1,6 +1,5 @@
-#+macro: travis [[https://travis-ci.org/hicview/hicview-frontend][https://travis-ci.org/hicview/hicview-frontend.svg?branch=master]]
+[![Build Status](https://travis-ci.org/hicview/hicview-frontend.svg?branch=master)](https://travis-ci.org/hicview/hicview-frontend)
 
-{{{travis}}}
 
 * 文档（待更新）
  详见Please see [[https://hicview.github.io/hicview-frontend/]]

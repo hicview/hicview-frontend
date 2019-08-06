@@ -1,6 +1,7 @@
 'use strict'
 
-import { Array1D } from './ts/types/arrays'
+/// <reference path="ts/types/arrays"/>
+import { Array1D } from 'hic-array.js'
 import { GridSystem } from './js/hicEngine/grid'
 
 main()

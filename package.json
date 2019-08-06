@@ -47,6 +47,7 @@
 						"webpack-dev-server": "^3.4.1"
 			},
 			"dependencies": {
+						"@types/numjs": "^0.14.4",
 						"axios": "^0.19.0",
 						"brfs": "^2.0.2",
 						"canvas": "^2.5.0",
@@ -62,6 +63,7 @@
 						"mongoose": "^5.5.11",
 						"ndarray": "^1.0.18",
 						"ndarray-ops": "^1.2.2",
+						"numjs": "^0.16.0",
 						"pixi.js": "^5.0.3",
 						"randomcolor": "^0.5.4",
 						"react": "^16.8.6",

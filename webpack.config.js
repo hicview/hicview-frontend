@@ -4,7 +4,7 @@ const webpack = require('webpack')
 
 module.exports = {
   mode: 'development',
-  entry: ['./src/hicviewer.js'],
+  entry: ['./src/index.ts'],
 
 
   module: {
