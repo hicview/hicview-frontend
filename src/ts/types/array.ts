@@ -48,7 +48,12 @@ export class HiCArray implements HiCArrayInterface {
     timeSeries: boolean
     timeInfo?: TimeInfo
     constructor(array: NdArray<any>, dimension: ArrayDimension, timeSeries: boolean, timeInfo?: TimeInfo) {
-        this.data = array
+        if (typeof array == typeof []) {
+            this.data = nj.array(array)
+        } else {
+            this.data = array
+        }
+
         this.dimension = dimension
         this.timeSeries = timeSeries
         this.timeInfo = timeInfo

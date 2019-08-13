@@ -1,4 +1,3 @@
-'use strict'
 
 // Pipelines //////////////////////////////////////////////////////////////////
 
@@ -8,20 +7,36 @@
   
 */
 export class StepFunction {
-    func: (data: any, parameters?: object) => any
-    parameters?: object
-    constructor(func: (data: any, parameters?: object) => any, parameters?: object) {
+    func: (data: any, ...parameters: any[]) => any
+    parameters: any[]
+    // Here the parameters is passed from Pipeline, which is the rest parameters of Pipeline.step function
+    constructor(func: (data: any, parameters?: any[]) => any,
+        parameters?: any[]) {
         this.func = func
         if (parameters) {
             this.parameters = parameters
         }
     }
-    execute(data: any) {
+    _execute = (data: any, ctx?: object): any => {
+        // Bind ctx to this.func's `this`
+        let _ctx = ctx ? ctx : null
+        let _newThis = Object.assign(this)
+        _newThis.ctx = _ctx
+        let res
         if (this.parameters) {
-            return this.func(data, this.parameters)
+            res = this.func.call(ctx !== null ? _newThis : this, data, ...this.parameters)
         } else {
-            return this.func(data)
+            res = this.func.call(ctx !== null ? _newThis : this, data)
         }
+        return res
+    }
+    execute(data: any) {
+        return this._execute(data)
+    }
+
+    executeWithCtx(data: any, ctx: object) {
+
+        return this._execute(data, ctx)
     }
 }
 /*
@@ -80,7 +95,8 @@ export class Pipeline implements PipelineInterface {
         }
         this.steps = new Array<StepFunction>()
     }
-    step(func: (data: any, parameters?: object) => any, parameters?: object) {
+    step(func: (data: any, parameters: any[]) => any,
+        ...parameters: any[]) {
         if (parameters) {
             this.steps.push(new StepFunction(func, parameters))
         } else {
@@ -100,3 +116,38 @@ export class Pipeline implements PipelineInterface {
         return this.data
     }
 }
+
+
+export class ContextPipeline extends Pipeline {
+    // If context could be modified, it should move to inData's properties, `ctx` should remain the same during the procession of pipeline
+    readonly ctx: object
+    constructor(inData: any, ctx: object, isFromEntry?: boolean) {
+        if (isFromEntry) {
+            super(inData, isFromEntry)
+        } else {
+            super(inData)
+        }
+        this.ctx = ctx
+    }
+    step(func: (data: any, ...parameters: any[]) => any, ...parameters: any[]) {
+        if (parameters) {
+            this.steps.push(new StepFunction(func, parameters))
+        } else {
+            this.steps.push(new StepFunction(func))
+        }
+        return this
+    }
+    execute() {
+        this.steps.forEach(d => {
+            let _result = d.executeWithCtx(this.data, this.ctx)
+            this.data = _result
+        })
+        this.steps = []
+        return this.data
+    }
+    getData() {
+        return this.data
+    }
+}
+
+
