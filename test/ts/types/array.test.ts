@@ -1,32 +1,27 @@
 'use strict'
 
-import {
-    Array1D,
-    Array2D,
-    Array3D
-} from '../../../src/ts/types/arrays'
+import * as nj from 'numjs'
+import { HiCArray } from '../../../src/ts/types/array'
 
 
 describe('Test Array Types', () => {
     test('ArrayTypes:Array1D', () => {
-        let a: Array1D = {
-            data: [1, 2, 3],
-            timeSeries: false
-        }
-        expect(a.data).toStrictEqual([1, 2, 3])
+        let a = new HiCArray(
+            nj.array([1, 2, 3]),
+            1,
+            false
+        )
+        expect(a.data).toStrictEqual(nj.array([1, 2, 3]))
     })
-    test('ArrayTypes:Array2D', () => {
-        let a: Array2D = {
-            data: [[1, 2, 3]],
-            timeSeries: false
-        }
-        expect(a.data).toStrictEqual([[1, 2, 3]])
-    })
-    test('ArrayTypes:Array3D', () => {
-        let a: Array3D = {
-            data: [[[1, 2, 3]]],
-            timeSeries: false
-        }
-        expect(a.data).toStrictEqual([[[1, 2, 3]]])
+
+    test('ArrayTypes:Array1D with dimension', () => {
+        let a = new HiCArray(
+            nj.array([[1, 2, 3],
+            [2, 3, 4]]),
+            1,
+            false,
+            [0, 1]
+        )
+        expect(a.getDataAtTime(0)).toStrictEqual(nj.array([1, 2, 3]))
     })
 })
