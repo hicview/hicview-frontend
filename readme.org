@@ -69,26 +69,43 @@ http-server --cors -a localhost # Please allow CORS and run in localhost
 
 
     #+BEGIN_SRC lang
-   ts
-   └── types
-       └── types.d.ts
-   js
-   └── hicEngine
-       ├── TADAnalyzePipeline.js
-       ├── components.js
-       ├── dataEntry.js
-       ├── engineError.js
-       ├── eventEngine.js
-       ├── grid.js
-       ├── kit.js
-       ├── math.js
-       ├── pipelines.js
-       ├── reflection.js
-       ├── settings.js
-       ├── stage.js
-       ├── stateArray.js
-       ├── symbols.js
-       └── utils.js
+   src/ts
+   ├── components
+   │   ├── component.ts
+   │   └── dataComponent.ts
+   ├── dataEntry
+   │   └── dataEntry.ts
+   ├── event
+   │   └── event.ts
+   ├── pipelines
+   │   ├── pipelines.d.ts
+   │   └── pipelines.ts
+   ├── stage
+   │   └── stage1D.ts
+   ├── types
+   │   ├── array.d.ts
+   │   └── array.ts
+   └── utils
+       └── mapped.d.ts
+   src/js
+   ├── hicEngine
+   │   ├── TADAnalyzePipeline.js
+   │   ├── components.js
+   │   ├── dataEntry.js
+   │   ├── engineError.js
+   │   ├── eventEngine.js
+   │   ├── grid.js
+   │   ├── kit.js
+   │   ├── math.js
+   │   ├── pipelines.js
+   │   ├── reflection.js
+   │   ├── settings.js
+   │   ├── stage.js
+   │   ├── stateArray.js
+   │   ├── symbols.js
+   │   └── utils.js
+   └── mock
+       └── mockHumanHiC.js
     #+END_SRC
 
 *** Project Settings

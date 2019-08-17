@@ -5,7 +5,7 @@ import * as nj from 'numjs'
 import {
     Pipeline,
     ContextPipeline
-} from '../../../src/ts/types/pipelines'
+} from '../../src/ts/pipelines/pipelines'
 
 describe('Test Pipeline Types', () => {
     test('PipelineTypes: Default Pipeline', () => {
