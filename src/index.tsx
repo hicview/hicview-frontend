@@ -1,22 +1,16 @@
 'use strict'
 
-import * as nj from 'numjs'
 import * as React from 'react'
 import * as ReactDom from 'react-dom'
-import { HiCArray } from './ts/types/array'
-import { GridSystem } from './js/hicEngine/grid'
-import getMockHumanHiC from './js/mock/mockHumanHiC'
+
+import { mockHiCData } from './ts/dataEntry/mockData'
+import Stage3D from './ts/stage/stage3D'
 import App from './ts/UI/app'
 
 main()
 
 async function main() {
-    let a: HiCArray = new HiCArray(
-        nj.array([1, 2, 3]),
-        1,
-        false
-    )
-    let b = GridSystem.instance
+
     // create Root Element
     const rootElement = document.getElementById('root')
         ? document.getElementById('root')
@@ -28,12 +22,10 @@ async function main() {
         }()
 
     ReactDom.render(<App />, rootElement)
-    let mockHiC = new HiCArray((await getMockHumanHiC()).data,
-        2,
-        false)
+    let hicData = await mockHiCData()
 
+    console.log(hicData)
 
-    console.log(mockHiC)
-    console.log(a)
-    console.log(b)
+    let s3d = new Stage3D()
+
 }

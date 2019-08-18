@@ -23,30 +23,30 @@ export class DataEntry implements DataEntryI {
         this.isAsync = isAsync
         this.locator = locator
     }
-    get fetchMethod() {
+    fetchMethod = function () {
         if (this.srcType === 'url:text') {
             let config = {}
-            return function (url: string) {
-                return axios.get(url, config)
+            return async function (url: string) {
+                return await axios.get(url, config)
             }
         }
 
         if (this.srcType === 'url:json') {
             let config = {}
-            return function (url: string) {
-                return axios.get(url, config)
+            return async function (url: string) {
+                return await axios.get(url, config)
             }
         }
 
     }
-    async fetch(args: {
+    fetch = async function (args: {
         [index: string]: boolean | ((...args: any[]) => void)
     }) {
         let options = Object.assign({ useAsync: this.isAsync }, args)
         if (options.useAsync) {
-            return await this.fetchMethod(this.locator)
+            return await this.fetchMethod()(this.locator)
         } else {
-            return this.fetchMethod(this.locator)
+            return this.fetchMethod()(this.locator)
         }
 
     }

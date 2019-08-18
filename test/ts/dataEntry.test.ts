@@ -22,7 +22,7 @@ let mockRequest = jest.fn(function (url: string) {
 })
 
 mockRequest('./human').then(d => {
-    console.log(d)
+    //console.log(d)
 })
 
 describe('Test fetch local server data', () => {
