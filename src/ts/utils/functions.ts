@@ -5,6 +5,9 @@
  * @see Source project, ts-deepcopy https://github.com/ykdr2017/ts-deepcopy
  * @see Code pen https://codepen.io/erikvullings/pen/ejyBYg
  */
+import * as nj from 'numjs'
+import { HiCArray } from '../types/array'
+
 export const deepCopy = <T>(target: T): T => {
     if (target === null) {
         return target;
@@ -26,3 +29,17 @@ export const deepCopy = <T>(target: T): T => {
     }
     return target;
 };
+
+export function isNdArray(d: any): d is nj.NdArray {
+    return (<nj.NdArray>d).convolve !== undefined
+}
+
+export const arrayLength = (data: Array<number> | nj.NdArray<number> | HiCArray): number | number[] => {
+    if (data instanceof HiCArray) {
+        return (data.data as nj.NdArray).shape
+    } else if (isNdArray(data)) {
+        return (data as nj.NdArray).shape
+    } else if (data instanceof Array) {
+        return data.length
+    }
+}

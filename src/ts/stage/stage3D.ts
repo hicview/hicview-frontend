@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import * as  uuidv4 from 'uuid/v4'
 import Controller from './controller'
 import OrbitController from './orbitController'
+import VisualComponent from '../components/visualComponent'
 
 export default class Stage3D {
     static instances: Stage3D[]
@@ -10,14 +11,20 @@ export default class Stage3D {
     scene: THREE.Scene
     renderer: THREE.WebGLRenderer
     cameras: THREE.Camera[]
-    activeCamera: THREE.Camera
+
     controllers: Controller[]
-    activeController: Controller
+
     parentDom: HTMLElement
+    camPointLight: THREE.PointLight
     width: number
     height: number
+    components: VisualComponent[]
+
+    private _activeCamera: THREE.Camera
+    private _activeController: Controller
     constructor() {
         this.id = uuidv4()
+        this.components = []
         if (!Stage3D.instances) {
             Stage3D.instances = []
         }
@@ -39,6 +46,7 @@ export default class Stage3D {
         this.initScene()
         this.initCamera()
         this.initController()
+        this.initLight()
     }
 
     bindElement() {
@@ -63,7 +71,7 @@ export default class Stage3D {
             this.cameras = []
         }
         this.cameras.push(new THREE.PerspectiveCamera(50, this.width / this.height, 1, 3000))
-        const ac = this.getActiveCamera()
+        const ac = this.activeCamera
         ac.position.set(0, 0, 300)
         ac.lookAt(0, 0, 0)
         ac.layers.enable(0)
@@ -78,22 +86,52 @@ export default class Stage3D {
         orbitController.enableDamping = true
         orbitController.dampingFactor = 0.25
         this.controllers.push(orbitController)
-        this.activeController = this.controllers[-1]
+        this._activeController = this.controllers[-1]
         console.log(this.activeController)
     }
-    getActiveCamera() {
-        if (!this.activeCamera) {
-            this.activeCamera = this.cameras[0]
-        }
-        return this.activeCamera
+    initLight() {
+        this.camPointLight = new THREE.PointLight(0xffffff)
+        this.camPointLight.position.set(0, 0, 0)
+        // this.camPointLight.position.copy(this.activeCamera.position)
     }
-
+    get activeCamera(): THREE.Camera {
+        if (!this._activeCamera) {
+            this._activeCamera = this.cameras[0]
+        }
+        return this._activeCamera
+    }
+    get activeController() {
+        if (!this._activeController) {
+            this._activeController = this.controllers[0]
+        }
+        return this._activeController
+    }
     render(time: any) {
         const r = this.renderer
         r.setClearColor(0x000000, 0)
         r.setViewport(0, 0, this.width, this.height)
         // console.log(this.updateFunctions)
-        r.render(this.scene, this.getActiveCamera())
+        r.render(this.scene, this.activeCamera)
+        // comment this.camPointLight.position.copy(this.activeCamera.position)
+        if (this.activeController.update) {
+            this.activeController.update(time)
+            this.activeController.camera.updateMatrixWorld()
+        }
+        for (let i in this.components) {
+            this.components[i].render()
+        }
 
+    }
+
+    dispose() {
+
+    }
+
+    addComponents(c: VisualComponent) {
+        if (c.renderEnv === 'three') {
+            console.log(c)
+            this.scene.add(c.obj)
+            this.components.push(c)
+        }
     }
 }

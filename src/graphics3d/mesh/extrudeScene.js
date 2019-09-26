@@ -68,4 +68,4 @@ class ExtrudeScene {
 }
 
 export { ExtrudeScene,
-  circleShape }
+	 circleShape }

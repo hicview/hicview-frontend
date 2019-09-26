@@ -14,6 +14,7 @@ import Controller from './controller'
 
 
 export default class OrbitController extends Controller {
+
     constructor(object: THREE.PerspectiveCamera | THREE.OrthographicCamera, domElement: Element) {
         super(object, domElement)
         var scope = this

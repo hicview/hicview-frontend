@@ -1,6 +1,6 @@
 'use strict'
 
-import { ComponentBase } from './component'
+import ComponentBase from './component'
 
 
 export default class DataComponent extends ComponentBase {

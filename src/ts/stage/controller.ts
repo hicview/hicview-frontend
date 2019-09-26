@@ -7,6 +7,9 @@ export default class Controller extends THREE.EventDispatcher {
     public camera: THREE.PerspectiveCamera | THREE.OrthographicCamera
     public domElement: Element
     public controllerType: string
+
+    public update: any
+
     // Public properties
     public enabled: boolean
     public target: THREE.Vector3
