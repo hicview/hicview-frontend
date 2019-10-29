@@ -61,7 +61,7 @@
 						"express": "^4.17.1",
 						"fs": "0.0.1-security",
 						"lodash": "^4.17.15",
-						"mongoose": "^5.5.11",
+						"mongoose": "^5.7.5",
 						"ndarray": "^1.0.18",
 						"ndarray-ops": "^1.2.2",
 						"numjs": "^0.16.0",
