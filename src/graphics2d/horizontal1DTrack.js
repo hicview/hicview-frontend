@@ -52,7 +52,7 @@ class Horizontal1DTrack extends EventEmitter {
    * line_stroke_width is the line width
    * circle_radius is the circle mark point's radius
    * @memberof Horizontal1DTrack
-   * @property {Document.Element} baseDOM - base DOM element that all other elements bind to
+   * @property {Document.Element} baseDOM - base DOM element tha t all other elements bind to
    * @property {number} width
    * @property {number} height
    * @property {svg} svg - parent svg
@@ -67,7 +67,7 @@ class Horizontal1DTrack extends EventEmitter {
    * @property {*} drag_handler - default drag behaviour handler #Not implemented
    * @property {d3.axisBottom} xAxis
    * @property {d3.axisLeft} yAxis
-   * @property {g} gX
+      * @property {g} gX
    * @property {g} gY
    * @property {d3.scale} x_scale
    * @property {d3.scale} y_scale
@@ -195,7 +195,7 @@ class Horizontal1DTrack extends EventEmitter {
     this.drag_handler = d3.drag()
       .on('drag', this.dragedVertical)
     this.behaviour = undefined
-  }
+   }
 
   /// //////////////////////////////////////////////////////////////////////////
   //                               Draw Content                              //

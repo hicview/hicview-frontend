@@ -1,9 +1,10 @@
-
+import { deepCopy } from '../utils/functions'
 // Pipelines //////////////////////////////////////////////////////////////////
 
 /*
   Step Function for Pipelines, accept a required field `func` and an optional field `parameters`
-  execute(): execute func on specific data and return the result
+  async execute(): asynchronously execute func on specific data and return the result, return a Promised result
+  --- use `await stepFunction.execute()`
   
 */
 export class StepFunction {
@@ -17,26 +18,26 @@ export class StepFunction {
             this.parameters = parameters
         }
     }
-    _execute = (data: any, ctx?: object): any => {
+    async _execute(data: any, ctx?: object) {
         // Bind ctx to this.func's `this`
         let _ctx = ctx ? ctx : null
         let _newThis = Object.assign(this)
         _newThis.ctx = _ctx
         let res
         if (this.parameters) {
-            res = this.func.call(ctx !== null ? _newThis : this, data, ...this.parameters)
+            res = await this.func.call(ctx !== null ? _newThis : this, data, ...this.parameters)
         } else {
-            res = this.func.call(ctx !== null ? _newThis : this, data)
+            res = await this.func.call(ctx !== null ? _newThis : this, data)
         }
         return res
     }
-    execute(data: any) {
-        return this._execute(data)
+    async execute(data: any) {
+        return await this._execute(data)
     }
 
-    executeWithCtx(data: any, ctx: object) {
+    async executeWithCtx(data: any, ctx: object) {
 
-        return this._execute(data, ctx)
+        return await this._execute(data, ctx)
     }
 }
 /*
@@ -44,7 +45,7 @@ export class StepFunction {
   --------------------
   Construct: let a = Pipelines(inData)
   Add a step: a.step((i) => {return i+1})
-  Get output: let output = a.execute()
+  Get output: let output = await a.execute()
 
 
 */
@@ -64,7 +65,7 @@ export interface PipelineInterface {
      */
     steps: StepFunction[],
     step: (func: (data: any, parameters?: object) => any, parameters?: object) => this,
-    execute: () => any,
+    execute: () => Promise<any> | any,
 }
 
 
@@ -76,7 +77,7 @@ export interface PipelineInterface {
   if the data is from data entry, first retrieve the true data from the entry.
   data: the result at each step
   step(): add a new processing step
-  execute(): execute and output the final result
+  async execute(): execute and output the final result
 
 */
 export class Pipeline implements PipelineInterface {
@@ -88,12 +89,8 @@ export class Pipeline implements PipelineInterface {
     constructor(inData: any, isFromEntry?: boolean) {
         this.inData = inData
         this.isFromEntry = isFromEntry
-        if (isFromEntry) {
-            this.data = inData.get()
-        } else {
-            this.data = inData
-        }
         this.steps = new Array<StepFunction>()
+        this.data = deepCopy(inData)
     }
     step(func: (data: any, parameters: any[]) => any,
         ...parameters: any[]) {
@@ -104,11 +101,17 @@ export class Pipeline implements PipelineInterface {
         }
         return this
     }
-    execute() {
-        this.steps.forEach(d => {
-            let _result = d.execute(this.data)
+    async execute() {
+        if (this.isFromEntry === true) {
+            this.steps.unshift(new StepFunction(async () => {
+                return await this.data.result()
+            }))
+        }
+        for (let i = 0; i < this.steps.length; i++) {
+            let step = this.steps[i]
+            let _result = await step.execute(this.data)
             this.data = _result
-        })
+        }
         this.steps = []
         return this.data
     }
@@ -137,11 +140,12 @@ export class ContextPipeline extends Pipeline {
         }
         return this
     }
-    execute() {
-        this.steps.forEach(d => {
-            let _result = d.executeWithCtx(this.data, this.ctx)
+    async execute() {
+        for (let i = 0; i < this.steps.length; i++) {
+            let step = this.steps[i]
+            let _result = await step.executeWithCtx(this.data, this.ctx)
             this.data = _result
-        })
+        }
         this.steps = []
         return this.data
     }
